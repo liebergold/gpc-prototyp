@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#FF5CA8" id="theme">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="robots" content="noindex,nofollow">
+<title>German Pink Cardigan App</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=Gasoek+One&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* Patchwork-Cardigan: jeder Bereich ist ein eigener Flicken, Farbe heißt Ort. Grobstrick in der Schrift, echte Maschen im Hero. */
+  --pink:#FF5CA8; --plum:#2B0A33; --butter:#FFE14D; --cobalt:#2F3CF0; --clover:#1FCB82; --wool:#FFF3F8;
+  --display:'Gasoek One','Arial Black',Impact,sans-serif;
+  --body:'Bricolage Grotesque',ui-rounded,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --spring:cubic-bezier(.34,1.56,.64,1);
+  color-scheme:light;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0;background:var(--plum)}
+body{font:500 16px/1.35 var(--body);color:var(--plum);overscroll-behavior:none;-webkit-text-size-adjust:100%}
+button,input,select,textarea{font:inherit;color:inherit}
+button{background:none;border:0;padding:0;cursor:pointer;touch-action:manipulation;text-align:inherit;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+h1,h2,h3,p{margin:0}
+svg{display:block}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+
+.app{--bg:var(--pink);--fg:var(--plum);--soft:rgba(43,10,51,.78);--line:rgba(43,10,51,.36);--act:var(--plum);--act-fg:var(--wool);
+  position:relative;height:100%;max-width:480px;margin:0 auto;display:flex;flex-direction:column;background:var(--bg);color:var(--fg);overflow:hidden}
+.app[data-world=videos]{--bg:var(--plum);--fg:var(--wool);--soft:rgba(255,243,248,.78);--line:rgba(255,243,248,.32);--act:var(--pink);--act-fg:var(--plum)}
+.app[data-world=ideen]{--bg:var(--butter);--act:var(--plum);--act-fg:var(--butter)}
+.app[data-world=kalender]{--bg:var(--cobalt);--fg:var(--wool);--soft:rgba(255,243,248,.84);--line:rgba(255,243,248,.38);--act:var(--butter);--act-fg:var(--plum)}
+.app[data-world=deals]{--bg:var(--clover);--act:var(--plum);--act-fg:var(--clover)}
+
+.top{flex:none;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:calc(env(safe-area-inset-top) + 10px) 16px 4px}
+.mark{font-weight:800;font-size:14px;letter-spacing:-.01em;white-space:nowrap}
+.tag{flex:none;font-size:13px;font-weight:700;line-height:1;padding:8px 11px;min-height:32px;background:var(--wool);color:var(--plum);border-radius:3px;border-inline:3px dashed rgba(43,10,51,.45);transition:transform .18s var(--spring)}
+.tag:active{transform:scale(.95)}
+
+.view{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;padding:2px 16px 30px;display:flex;flex-direction:column;gap:18px;-webkit-overflow-scrolling:touch}
+.title{font:400 clamp(58px,17vw,74px)/.95 var(--display);letter-spacing:-.005em}
+.title.small{font-size:clamp(38px,11.5vw,50px);line-height:1.02;text-wrap:balance;overflow-wrap:anywhere}
+.head{display:flex;flex-direction:column;gap:4px}
+.sub{color:var(--soft);font-size:16px}
+.h2{font-weight:800;font-size:20px;line-height:1.2;display:flex;align-items:center;gap:8px}
+.count{font-size:13px;font-weight:800;min-width:22px;height:22px;padding:0 6px;border-radius:11px;background:var(--fg);color:var(--bg);display:inline-grid;place-items:center}
+section{display:flex;flex-direction:column}
+section>.h2{margin-bottom:2px}
+
+.row{display:flex;gap:12px;align-items:center;padding:11px 0;border-bottom:2px dashed var(--line);width:100%}
+.row:last-child{border-bottom:0}
+.grow{flex:1;min-width:0;display:flex;flex-direction:column}
+.grow b{font-weight:700;font-size:16px;line-height:1.25}
+.grow small{font-size:14px;color:var(--soft);line-height:1.3}
+.row.done b{text-decoration:line-through;text-decoration-thickness:2px;opacity:.72}
+
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:56px;padding:10px 18px;border-radius:18px;background:var(--act);color:var(--act-fg);font-weight:800;font-size:17px;line-height:1.15;text-align:center;outline:2px dashed currentColor;outline-offset:-6px;transition:transform .18s var(--spring)}
+.btn:active{transform:scale(.96)}
+.btn.ghost{background:transparent;color:var(--fg);outline:0;box-shadow:inset 0 0 0 2.5px var(--fg)}
+.btn svg{width:22px;height:22px;flex:none}
+.link{align-self:center;font-weight:700;font-size:15px;text-decoration:underline;text-underline-offset:3px;padding:10px 8px;min-height:44px}
+:focus-visible{box-shadow:0 0 0 3px var(--bg),0 0 0 6px var(--fg)!important}
+.btn.ghost:focus-visible{box-shadow:inset 0 0 0 2.5px var(--fg),0 0 0 3px var(--bg),0 0 0 6px var(--fg)!important}
+
+.cb{flex:none;width:38px;height:38px;border-radius:50%;transition:transform .22s var(--spring)}
+.cb:active{transform:scale(.86) rotate(-20deg)}
+.cb svg{width:38px;height:38px}
+.cb .th{stroke-dasharray:24;stroke-dashoffset:24;transition:stroke-dashoffset .3s ease}
+.cb[aria-pressed=true] .th{stroke-dashoffset:0}
+.dot{flex:none;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;box-shadow:inset 0 0 0 2.5px var(--fg)}
+.dot svg{width:20px;height:20px}
+
+.hero{position:relative;display:block;width:100%;transform:rotate(-1.2deg);transition:transform .22s var(--spring)}
+.hero:active{transform:rotate(-1.2deg) scale(.98)}
+.hero canvas{display:block;width:100%;border-radius:20px;background:#1B0620}
+.sewn{position:absolute;left:14px;top:-11px;z-index:1;font-size:14px;font-weight:800;line-height:1;padding:7px 10px;background:var(--butter);color:var(--plum);border-radius:3px;border-inline:3px dashed rgba(43,10,51,.45);transform:rotate(2.6deg)}
+.cap{font-weight:700;font-size:17px;margin-top:-6px}
+.cap small{display:block;font-size:14px;font-weight:500;color:var(--soft)}
+
+.hint{display:flex;align-items:center;gap:12px;width:100%;padding:12px 14px;border-radius:16px;background:var(--butter);color:var(--plum);font-weight:700;font-size:15px;line-height:1.25;transition:transform .18s var(--spring)}
+.hint:active{transform:scale(.97)}
+.hint svg{flex:none;width:22px;height:22px}
+.hint small{display:block;font-weight:500;font-size:14px}
+
+.mini{flex:none;width:48px;height:48px;border-radius:12px;overflow:hidden;background:#1B0620}
+.mini canvas{display:block;width:100%}
+.pill{flex:none;font-size:13px;font-weight:800;line-height:1;padding:6px 9px;border-radius:999px;background:var(--p,var(--wool));color:var(--pt,var(--plum));white-space:nowrap}
+.pill.neu{--p:var(--pink)} .pill.frei{--p:var(--butter)} .pill.lauf{--p:var(--cobalt);--pt:var(--wool)} .pill.geld{--p:var(--plum);--pt:var(--wool)}
+.pill.leer{--p:transparent;--pt:var(--fg);box-shadow:inset 0 0 0 2px var(--line)} .pill.mat{--p:var(--butter)} .pill.schnitt{--p:var(--pink)} .pill.online{--p:var(--clover)}
+
+.back{display:flex;align-items:center;gap:4px;font-weight:700;font-size:15px;min-height:40px;align-self:flex-start}
+.back svg{width:20px;height:20px}
+.patch{position:relative;transform:rotate(.8deg)}
+.patch canvas{display:block;width:100%;border-radius:18px;background:#1B0620}
+.note{font-size:14px;color:var(--soft)}
+.bar{height:12px;border-radius:6px;background:rgba(255,243,248,.18);overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:repeating-linear-gradient(90deg,var(--pink) 0 10px,var(--butter) 10px 14px);border-radius:6px}
+.prog{display:flex;flex-direction:column;gap:6px;font-weight:700;font-size:15px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{min-height:42px;padding:9px 14px;border-radius:999px;font-weight:700;font-size:15px;line-height:1.1;box-shadow:inset 0 0 0 2px var(--fg);transition:transform .18s var(--spring)}
+.chip:active{transform:scale(.94)}
+.chip[aria-pressed=true]{background:var(--fg);color:var(--bg)}
+.stamp{position:absolute;right:-6px;top:-14px;width:96px;height:96px;display:grid;place-items:center;z-index:2;color:var(--plum);font-weight:800;font-size:17px;pointer-events:none}
+.stamp svg{position:absolute;inset:0;width:100%;height:100%}
+.stamp span{position:relative;transform:rotate(-10deg)}
+
+.pad{display:flex;flex-direction:column;gap:10px;padding:12px;border-radius:20px;background:var(--wool);color:var(--plum);transform:rotate(-.6deg)}
+.pad textarea{width:100%;min-height:92px;resize:none;border:0;background:transparent;font-size:19px;font-weight:600;line-height:1.3;padding:4px;outline:none;color:var(--plum)}
+.pad textarea::placeholder{color:rgba(43,10,51,.68)}
+.pad .btn{--act:var(--plum);--act-fg:var(--butter);min-height:52px}
+.pad:focus-within{box-shadow:0 0 0 3px var(--plum)}
+.err{color:#A30F4F;font-size:15px;font-weight:700}
+.wall{columns:2;column-gap:12px}
+.st{display:block;width:100%;margin:0 0 12px;break-inside:avoid;padding:14px 14px 12px;border-radius:18px 18px 18px 5px;background:var(--c);color:var(--t);font-weight:700;font-size:16px;line-height:1.24;transform:rotate(var(--r));outline:2px dashed var(--o);outline-offset:-6px;transition:transform .2s var(--spring)}
+.st:active{transform:rotate(var(--r)) scale(.96)}
+.st small{display:block;margin-top:8px;font-size:13px;font-weight:600}
+.st.gone{--c:transparent!important;--t:var(--plum)!important;--o:var(--line)!important;font-weight:600}
+.slap{animation:slap .46s var(--spring) both}
+@keyframes slap{from{transform:rotate(calc(var(--r) - 16deg)) scale(1.7);opacity:0}}
+
+.week{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}
+.day{display:flex;flex-direction:column;align-items:center;gap:1px;padding:8px 0 7px;min-height:66px;border-radius:14px;background:rgba(255,243,248,.14);font-size:13px;font-weight:700;line-height:1.1;transition:transform .18s var(--spring)}
+.day:active{transform:scale(.92)}
+.day b{font:800 20px/1.15 var(--body);font-variant-numeric:tabular-nums}
+.day i{width:7px;height:7px;border-radius:50%;background:var(--butter);margin-top:2px;visibility:hidden}
+.day.has i{visibility:visible}
+.day[aria-pressed=true]{background:var(--pink);color:var(--plum)}
+.day[aria-pressed=true] i{background:var(--plum)}
+.day.today:not([aria-pressed=true]){box-shadow:inset 0 0 0 2px var(--wool)}
+.when{flex:none;width:62px;display:flex;flex-direction:column;align-items:flex-start}
+.when b{font:800 19px/1.1 var(--body);font-variant-numeric:tabular-nums}
+.when small{font-size:13px;color:var(--soft);line-height:1.2}
+.ty{flex:none;width:12px;align-self:stretch;min-height:40px;border-radius:6px;background:var(--c)}
+.grp{font-weight:800;font-size:17px;margin-top:10px}
+.grp:first-child{margin-top:0}
+
+.deal{position:relative;display:flex;flex-direction:column;gap:3px;width:100%;padding:13px 26px;background:var(--wool);color:var(--plum);border-radius:5px;transition:transform .18s var(--spring)}
+.deal::before,.deal::after{content:'';position:absolute;top:0;bottom:0;width:15px;border-style:dashed;border-color:rgba(43,10,51,.42);border-width:0}
+.deal::before{left:0;border-right-width:2px}
+.deal::after{right:0;border-left-width:2px}
+.deal:active{transform:scale(.97)}
+.deal .t{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.deal .n{font:400 25px/1.05 var(--display)}
+.deal small{font-size:15px;line-height:1.25;color:rgba(43,10,51,.82)}
+.deal .m{font-weight:800}
+.deals{display:flex;flex-direction:column;gap:10px}
+
+.layer{position:absolute;inset:0;z-index:20;pointer-events:none}
+.layer.open{pointer-events:auto}
+.scrim{position:absolute;inset:0;background:rgba(43,10,51,.6);opacity:0;transition:opacity .22s ease}
+.layer.open .scrim{opacity:1}
+.sheet{--bg:var(--wool);--fg:var(--plum);--soft:rgba(43,10,51,.8);--line:rgba(43,10,51,.32);--act:var(--plum);--act-fg:var(--wool);
+  position:absolute;left:0;right:0;bottom:0;max-height:90%;overflow-y:auto;display:flex;flex-direction:column;gap:14px;background:var(--bg);color:var(--fg);border-radius:26px 26px 0 0;padding:22px 18px calc(env(safe-area-inset-bottom) + 20px);transform:translateY(102%);transition:transform .36s cubic-bezier(.2,1,.3,1);outline:none}
+.layer.open .sheet{transform:none}
+.sheet h2{font:400 32px/1.02 var(--display);padding-right:44px;overflow-wrap:anywhere}
+.x{position:absolute;right:10px;top:10px;width:44px;height:44px;display:grid;place-items:center;border-radius:50%}
+.x svg{width:24px;height:24px}
+.field{display:flex;flex-direction:column;gap:6px}
+.field label,.lab{font-weight:800;font-size:15px}
+.field input,.field select,.field textarea{width:100%;min-height:52px;border-radius:14px;border:2.5px solid var(--plum);background:#FFFAFC;font-size:17px;padding:11px 13px;color:var(--plum)}
+.field textarea{resize:none;line-height:1.35}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.quote{background:rgba(43,10,51,.07);border-radius:14px;padding:12px 14px;white-space:pre-line;font-size:16px;line-height:1.4}
+.fold{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:14px;background:var(--butter);font-weight:700;overflow-wrap:anywhere}
+.fold svg{flex:none;width:26px;height:26px}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;border-radius:16px;box-shadow:inset 0 0 0 2.5px var(--plum)}
+.seg button{min-height:46px;border-radius:12px;font-weight:800;font-size:15px;text-align:center;line-height:1.1;padding:4px}
+.seg button[aria-pressed=true]{background:var(--plum);color:var(--wool)}
+
+.res{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;font-size:15px}
+.res dt{color:var(--soft)}
+.res dd{margin:0;font-weight:700;overflow-wrap:anywhere;text-align:right}
+.card{display:flex;flex-direction:column;gap:10px;padding:14px;border-radius:18px;background:var(--wool);color:var(--plum);--soft:rgba(43,10,51,.8);--fg:var(--plum);--bg:var(--wool);--act:var(--plum);--act-fg:var(--wool)}
+.card .field input{min-height:50px}
+.verdict{padding:11px 13px;border-radius:12px;font-weight:800;line-height:1.25}
+.verdict.ok{background:var(--clover);color:var(--plum)}
+.verdict.bad{background:var(--pink);color:var(--plum)}
+.verdict.hm{background:var(--butter);color:var(--plum)}
+.steps{display:flex;flex-direction:column;gap:6px;margin:0;padding-left:22px;font-size:16px}
+
+.hem{position:relative;z-index:10;flex:none;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));align-items:end;padding:8px 4px calc(env(safe-area-inset-bottom) + 6px);color:var(--wool);
+  background:repeating-linear-gradient(90deg,#3A1445 0 3px,#22072A 3px 6px)}
+.hem::before{content:'';position:absolute;left:0;right:0;top:0;border-top:3px dashed var(--pink)}
+.tab{--tab:var(--wool);position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:1px;min-height:54px;justify-content:flex-end;font-size:12px;font-weight:700;line-height:1.2;text-align:center}
+.tab .ico{width:46px;height:32px;border-radius:12px;display:grid;place-items:center;transition:background-color .2s,color .2s,transform .22s var(--spring)}
+.tab .ico svg{width:23px;height:23px}
+.tab:active .ico{transform:scale(.88)}
+.tab[aria-current=page] .ico{background:var(--tab);color:var(--plum)}
+.tab[data-tab=heute]{--tab:var(--pink)} .tab[data-tab=kalender]{--tab:#8C96FF} .tab[data-tab=deals]{--tab:var(--clover)}
+.knob{width:66px;height:66px;margin-top:-34px;margin-bottom:1px;transition:transform .42s var(--spring)}
+.knob svg{width:66px;height:66px}
+.tab:active .knob{transform:scale(.9)}
+.tab[aria-current=page] .knob{transform:rotate(135deg) scale(1.05)}
+
+.gate{--bg:var(--plum);--fg:var(--wool);--soft:rgba(255,243,248,.78);--act:var(--pink);--act-fg:var(--plum);position:absolute;inset:0;z-index:40;display:flex;flex-direction:column;justify-content:center;gap:20px;padding:calc(env(safe-area-inset-top) + 20px) 20px calc(env(safe-area-inset-bottom) + 20px);background:var(--bg);color:var(--fg);overflow-y:auto}
+.gate-patch{flex:none;transform:rotate(-1.2deg)}
+.gate-patch canvas{display:block;width:100%;border-radius:20px;background:#1B0620}
+.gate form{display:flex;flex-direction:column;gap:10px}
+.gate label{font-weight:800;font-size:17px}
+.gate input{width:100%;min-height:56px;border:0;border-radius:16px;background:var(--wool);color:var(--plum);font-size:18px;padding:12px 16px}
+.gate .err{color:var(--butter)}
+.gate .note{text-align:center}
+
+.toast{position:absolute;z-index:30;left:14px;right:14px;bottom:calc(env(safe-area-inset-bottom) + 92px);padding:12px 14px;border-radius:14px;background:var(--plum);color:var(--wool);box-shadow:0 0 0 2px var(--wool);font-weight:700;font-size:15px;line-height:1.25;opacity:0;transform:translateY(14px) rotate(-.6deg);transition:opacity .2s,transform .3s var(--spring);pointer-events:none}
+.toast.on{opacity:1;transform:rotate(-.6deg)}
+.pop{position:absolute;z-index:31;width:16px;height:16px;border-radius:50%;pointer-events:none;background:radial-gradient(circle at 36% 50%,var(--plum) 0 1.4px,transparent 1.9px),radial-gradient(circle at 64% 50%,var(--plum) 0 1.4px,transparent 1.9px),var(--c)}
+
+::view-transition-old(root),::view-transition-new(root){animation:none;mix-blend-mode:normal}
+::view-transition-new(root){z-index:2}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important}}
+@media (min-width:481px){.app{box-shadow:0 0 0 2px rgba(255,243,248,.14)}}
+</style>
+</head>
+<body>
+<div class="app" id="app" data-world="heute">
+  <header class="top">
+    <span class="mark">German Pink Cardigan</span>
+    <button class="tag" data-do="proto" id="proto-tag">Prototyp mit Beispielen</button>
+  </header>
+  <main class="view" id="view" tabindex="-1"></main>
+  <nav class="hem" aria-label="Bereiche" id="hem"></nav>
+  <div class="layer" id="layer"></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <div class="gate" id="gate">
+    <div class="gate-patch"><canvas id="gate-canvas" aria-hidden="true"></canvas></div>
+    <form data-form="gate">
+      <label for="gate-pass">Passwort</label>
+      <input id="gate-pass" type="password" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false">
+      <p class="err" id="gate-err" hidden>Das Passwort stimmt nicht. Versuch es noch einmal.</p>
+      <button class="btn" type="submit">Öffnen</button>
+    </form>
+    <p class="note">Prototyp mit Beispielen</p>
+  </div>
+  <input class="sr" type="file" id="picker" accept="video/*" multiple tabindex="-1" aria-hidden="true">
+  <input class="sr" type="file" id="test-picker" accept="video/*" tabindex="-1" aria-hidden="true">
+</div>
+
+<script>
+/* ---------- Helfer ---------- */
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const pad=n=>String(n).padStart(2,'0');
+const calm=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const DPR=Math.min(window.devicePixelRatio||1,3);
+const COL={pink:'#FF5CA8',plum:'#2B0A33',butter:'#FFE14D',cobalt:'#2F3CF0',clover:'#1FCB82',wool:'#FFF3F8'};
+const WORLD={heute:COL.pink,videos:COL.plum,ideen:COL.butter,kalender:COL.cobalt,deals:COL.clover};
+
+const base=new Date();base.setHours(12,0,0,0);
+const plus=n=>{const d=new Date(base);d.setDate(d.getDate()+n);return d};
+const iso=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const day=n=>iso(plus(n));
+const parse=s=>{const[y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d,12)};
+const fmt=(d,o)=>d.toLocaleDateString('de-DE',o);
+const dayDiff=s=>Math.round((parse(s)-base)/864e5);
+function rel(s){const n=dayDiff(s);if(n===0)return'Heute';if(n===1)return'Morgen';if(n===-1)return'Gestern';if(n>1&&n<7)return fmt(parse(s),{weekday:'long'});return fmt(parse(s),{day:'numeric',month:'long'})}
+const size=mb=>mb>=1000?`${(mb/1000).toFixed(1).replace('.',',')} GB`:mb<10?`${mb.toFixed(1).replace('.',',')} MB`:`${Math.round(mb)} MB`;
+
+const I={
+ sun:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.5 1.5M17.2 17.2l1.5 1.5M18.7 5.3l-1.5 1.5M6.8 17.2l-1.5 1.5"/></svg>',
+ film:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="2.8" y="5" width="18.4" height="14" rx="3.5"/><path d="M10 9.2v5.6l4.8-2.8z" fill="currentColor"/></svg>',
+ cal:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="3.5"/><path d="M3 10.5h18M8 2.8v4M16 2.8v4"/></svg>',
+ bag:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="12.5" rx="3.5"/><path d="M8.5 8V6a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v2M3 13.5h18"/></svg>',
+ plus:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
+ up:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15.5V4M7 8.5 12 3.5l5 5M4 20.5h16"/></svg>',
+ out:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 4.5H6.5a2.5 2.5 0 0 0-2.5 2.5v10.5a2.5 2.5 0 0 0 2.5 2.5H17a2.5 2.5 0 0 0 2.5-2.5V14M13.5 3.5h7v7M20.5 3.5 11 13"/></svg>',
+ back:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>',
+ go:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>',
+ x:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>',
+ folder:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><path d="M3 7a2.5 2.5 0 0 1 2.5-2.5h4l2.5 3h6.5A2.5 2.5 0 0 1 21 10v7.5a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 17.5z"/></svg>',
+ wait:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.8"/><path d="M12 7v5.2l3.2 2"/></svg>',
+ test:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="6.5" y="2.5" width="11" height="19" rx="2.8"/><path d="M11 18h2"/></svg>'
+};
+const knob=(fill,thread)=>`<svg viewBox="0 0 66 66" aria-hidden="true"><circle cx="33" cy="33" r="31.5" fill="${fill}" stroke="${COL.plum}" stroke-width="2.5"/><circle cx="33" cy="33" r="23.5" fill="none" stroke="${COL.plum}" stroke-opacity=".3" stroke-width="2.5"/><g fill="${COL.plum}"><circle cx="26.5" cy="26.5" r="3.7"/><circle cx="39.5" cy="26.5" r="3.7"/><circle cx="26.5" cy="39.5" r="3.7"/><circle cx="39.5" cy="39.5" r="3.7"/></g><path d="M26.5 26.5 39.5 39.5M39.5 26.5 26.5 39.5" stroke="${thread}" stroke-width="3.2" stroke-linecap="round"/></svg>`;
+const check=()=>`<svg viewBox="0 0 38 38" aria-hidden="true"><circle cx="19" cy="19" r="17.8" fill="${COL.wool}" stroke="${COL.plum}" stroke-width="2.4"/><circle cx="19" cy="19" r="12.6" fill="none" stroke="${COL.plum}" stroke-opacity=".28" stroke-width="1.8"/><g fill="${COL.plum}"><circle cx="15" cy="15" r="2.3"/><circle cx="23" cy="15" r="2.3"/><circle cx="15" cy="23" r="2.3"/><circle cx="23" cy="23" r="2.3"/></g><path class="th" d="M15 15 23 23M23 15 15 23" stroke="${COL.pink}" stroke-width="3" stroke-linecap="round" pathLength="24"/></svg>`;
+function burstStar(){const n=12,r1=47,r2=38;let p='';for(let i=0;i<n*2;i++){const a=Math.PI*i/n,r=i%2?r2:r1;p+=`${(48+r*Math.cos(a)).toFixed(1)},${(48+r*Math.sin(a)).toFixed(1)} `}return `<svg viewBox="0 0 96 96" aria-hidden="true"><polygon points="${p}" fill="${COL.clover}" stroke="${COL.plum}" stroke-width="2.5"/></svg>`}
+
+/* ---------- Strickmaschine: echte Maschen auf Canvas, Zeile für Zeile ---------- */
+const G={A:[14,17,17,31,17,17,17],B:[30,17,17,30,17,17,30],C:[14,17,16,16,16,17,14],D:[28,18,17,17,17,18,28],E:[31,16,16,30,16,16,31],F:[31,16,16,30,16,16,16],G:[14,17,16,23,17,17,15],H:[17,17,17,31,17,17,17],I:[14,4,4,4,4,4,14],J:[7,2,2,2,2,18,12],K:[17,18,20,24,20,18,17],L:[16,16,16,16,16,16,31],M:[17,27,21,21,17,17,17],N:[17,17,25,21,19,17,17],O:[14,17,17,17,17,17,14],P:[30,17,17,30,16,16,16],Q:[14,17,17,17,21,18,13],R:[30,17,17,30,20,18,17],S:[15,16,16,14,1,1,30],T:[31,4,4,4,4,4,4],U:[17,17,17,17,17,17,14],V:[17,17,17,17,17,10,4],W:[17,17,17,21,21,21,10],X:[17,17,10,4,10,17,17],Y:[17,17,17,10,4,4,4],Z:[31,1,2,4,8,16,31],'Ä':[10,0,14,17,31,17,17],'Ö':[10,0,14,17,17,17,14],'Ü':[10,0,17,17,17,17,14],'0':[14,17,17,17,17,17,14],'1':[4,12,4,4,4,4,14],'2':[14,17,1,2,4,8,31],'3':[31,2,4,2,1,17,14],'4':[2,6,10,18,31,2,2],'5':[31,16,30,1,1,17,14],'6':[6,8,16,30,17,17,14],'7':[31,1,2,4,8,8,8],'8':[14,17,17,14,17,17,14],'9':[14,17,17,15,1,2,12],':':[0,3,3,0,3,3,0],'.':[0,0,0,0,0,3,3],'-':[0,0,0,15,0,0,0],'!':[1,1,1,1,1,0,1],'?':[14,17,1,2,4,0,4],'&':[12,18,20,8,21,18,13],',':[0,0,0,0,1,1,2],'+':[0,4,4,31,4,4,0]};
+const NARROW={':':2,'.':2,'-':4,'!':1,',':2};
+const HEART=[10,31,31,14,4];
+const glyphW=c=>NARROW[c]||5;
+const textW=(s,sc)=>[...s].reduce((w,c)=>w+(c===' '?3:glyphW(c)+1)*sc,0)-sc;
+function stamp(g,cols,rows,s,x0,y0,sc,v){let x=x0;for(const c of s){if(c===' '){x+=3*sc;continue}const f=G[c];if(!f)continue;const w=glyphW(c);for(let y=0;y<7;y++)for(let i=0;i<w;i++)if(f[y]>>(w-1-i)&1)for(let a=0;a<sc;a++)for(let b=0;b<sc;b++){const rr=y0+y*sc+a,cc=x+i*sc+b;if(rr>=0&&rr<rows&&cc>=0&&cc<cols)g[rr*cols+cc]=v}x+=(w+1)*sc}}
+function hearts(g,cols,y0,v){const step=8;const n=Math.floor((cols-1)/step);const off=Math.floor((cols-(n*step-3))/2);for(let k=0;k<n;k++)for(let y=0;y<5;y++)for(let i=0;i<5;i++)if(HEART[y]>>(4-i)&1)g[(y0+y)*cols+off+k*step+i]=v}
+function wrap(t,max){const words=t.toUpperCase().replace(/ß/g,'SS').replace(/-/g,'- ').split(/\s+/).filter(Boolean);const out=[];let cur='';for(let w of words){while(w.length>max){if(cur){out.push(cur);cur=''}out.push(w.slice(0,max));w=w.slice(max)}const sep=cur&&!cur.endsWith('-')?' ':'';if((cur+sep+w).length<=max)cur+=sep+w;else{out.push(cur);cur=w}}if(cur)out.push(cur);return out.slice(0,4)}
+
+function compose(spec,w){
+  if(spec.kind==='hero'){
+    const cw=Math.max(4.6,Math.min(6.4,w/62)),ch=cw*.84,cols=Math.ceil(w/cw),sc=2,top=spec.top,big=spec.big;
+    const rows=2+5+3+7+3+7*sc+3+5+2,g=new Uint8Array(cols*rows),m=4;
+    hearts(g,cols,2,2);
+    stamp(g,cols,rows,top,m,10,1,1);
+    let s=sc; if(textW(big,s)>cols-m*2)s=1;
+    stamp(g,cols,rows,big,m,20+(s===1?3:0),s,1);
+    hearts(g,cols,rows-7,2);
+    return {cols,rows,cw,ch,g};
+  }
+  if(spec.kind==='title'){
+    let cw=6.2,lines,cols;
+    for(;cw>=4.2;cw-=.4){cols=Math.ceil(w/cw);const max=Math.floor((cols-6+1)/6);lines=wrap(spec.title,Math.max(4,max));if(lines.length<=3&&lines.every(l=>textW(l,1)<=cols-6))break}
+    const ch=cw*.84,rows=2+5+3+lines.length*9+2+5+1,g=new Uint8Array(cols*rows);
+    hearts(g,cols,2,2);
+    lines.forEach((l,i)=>stamp(g,cols,rows,l,3,10+i*9,1,1));
+    hearts(g,cols,rows-6,2);
+    return {cols,rows,cw,ch,g};
+  }
+  const cw=6,ch=5,cols=Math.ceil(w/cw),rows=10,g=new Uint8Array(cols*rows);
+  return {cols,rows,cw,ch,g};
+}
+const sprites=new Map();
+function shade(hex,a){const n=parseInt(hex.slice(1),16);let r=n>>16,g=n>>8&255,b=n&255;const t=a<0?0:255,p=Math.abs(a);return `rgb(${Math.round(r+(t-r)*p)},${Math.round(g+(t-g)*p)},${Math.round(b+(t-b)*p)})`}
+function sprite(color,cw,ch){
+  const k=`${color}${cw}${ch}`;if(sprites.has(k))return sprites.get(k);
+  const P=3,W=Math.ceil(cw+P*2),H=Math.ceil(ch*1.9+P*2),c=document.createElement('canvas');c.width=W*DPR;c.height=H*DPR;
+  const x=c.getContext('2d');x.scale(DPR,DPR);x.translate(P,P);x.lineCap='round';x.lineJoin='round';
+  const n=parseInt(color.slice(1),16),lum=(.3*(n>>16)+.59*(n>>8&255)+.11*(n&255))/255;
+  const leg=(w,s,dx=0,dy=0)=>{x.strokeStyle=s;x.lineWidth=w;x.beginPath();x.moveTo(cw*.08+dx,ch*.05+dy);x.quadraticCurveTo(cw*.2+dx,ch*.9+dy,cw*.5+dx,ch*1.25+dy);x.quadraticCurveTo(cw*.8+dx,ch*.9+dy,cw*.92+dx,ch*.05+dy);x.stroke()};
+  leg(cw*.52,shade(color,-.4),0,.7);leg(cw*.4,color);leg(cw*.11,shade(color,lum<.3?.1:.38),-cw*.07,-.2);
+  const s={c,W,H,P};sprites.set(k,s);return s;
+}
+class Knit{
+  constructor(cv,spec){this.cv=cv;this.spec=spec;this.p=spec.p??1;this.ctx=cv.getContext('2d');this.w=0;this.fit();
+    if(window.ResizeObserver){this.ro=new ResizeObserver(()=>this.fit());this.ro.observe(cv)}}
+  fit(){const w=Math.round(this.cv.clientWidth);if(!w||w===this.w)return;this.w=w;this.m=compose(this.spec,w);const{rows,ch}=this.m;this.H=Math.round(rows*ch);this.cv.width=Math.round(w*DPR);this.cv.height=Math.round(this.H*DPR);this.cv.style.height=this.H+'px';this.draw()}
+  draw(){
+    if(!this.m)return;const{cols,rows,cw,ch,g}=this.m,x=this.ctx,y=this.spec.yarn.map(c=>sprite(c,cw,ch));
+    x.setTransform(DPR,0,0,DPR,0,0);x.fillStyle='#1B0620';x.fillRect(0,0,this.w,this.H);
+    const done=Math.round(Math.min(1,Math.max(0,this.p))*cols*rows),full=Math.floor(done/cols),part=done-full*cols;
+    x.fillStyle='rgba(255,243,248,.2)';
+    for(let r=0;r<rows-full-(part?1:0);r++)for(let c=0;c<cols;c+=2)x.fillRect(c*cw+cw/2-.75,r*ch+ch/2-.75,1.5,1.5);
+    for(let k=0;k<=full&&k<rows;k++){const r=rows-1-k,n=k<full?cols:part;for(let i=0;i<n;i++){const c=k%2?cols-1-i:i,s=y[g[r*cols+c]];x.drawImage(s.c,c*cw-s.P,r*ch-s.P-ch*.2,s.W,s.H)}}
+  }
+  set(p){this.p=p;this.draw()}
+  knit(ms=620){
+    if(calm||document.hidden||!this.m){this.p=1;this.draw();return}
+    const t0=performance.now();let live=true;
+    const step=t=>{if(!live)return;const q=Math.min(1,(t-t0)/ms);this.p=1-Math.pow(1-q,1.6);this.draw();if(q<1)requestAnimationFrame(step)};
+    this.p=0;this.draw();requestAnimationFrame(step);
+    setTimeout(()=>{live=false;this.p=1;this.draw()},ms+260);
+  }
+}
+
+/* ---------- Beispieldaten ---------- */
+function seed(){
+  const h=new Date().getHours(),late=h>=20,soon=late?10:h+2;
+  return {
+    role:'creator',
+    todos:[
+      {id:'t1',who:'creator',text:'Skript an Marke A schicken',when:'bis Montag'},
+      {id:'t2',who:'creator',text:'Rohmaterial für Get ready with me hochladen',when:'Heute',video:'v2'},
+      {id:'t3',who:'philip',text:'Antwort an Marke B freigeben',when:'Offen',deal:'d2'},
+      {id:'t4',who:'philip',text:'Rechnung für Marke D nachhalten',when:'Diese Woche',deal:'d4'}
+    ],
+    videos:[
+      {id:'v1',title:'Flohmarkt-Haul',deal:null,status:'material',clips:[{name:'IMG_2041.MOV',mb:812},{name:'IMG_2042.MOV',mb:1420},{name:'IMG_2043.MOV',mb:640},{name:'IMG_2044.MOV',mb:1130}]},
+      {id:'v2',title:'Get ready with me',deal:null,status:'leer',clips:[]},
+      {id:'v3',title:'Reel für Marke C',deal:'d3',status:'schnitt',clips:[{name:'IMG_1988.MOV',mb:1760},{name:'IMG_1989.MOV',mb:905},{name:'IMG_1990.MOV',mb:388}]},
+      {id:'v4',title:'Cardigan-Umstyling',deal:null,status:'online',clips:[{name:'IMG_1902.MOV',mb:2210},{name:'IMG_1903.MOV',mb:730}]}
+    ],
+    ideas:[
+      {id:'i1',text:'Omas Cardigan in drei Looks neu stylen',at:day(0)},
+      {id:'i2',text:'Eine Woche nur Pink tragen, jeden Tag ein Clip',at:day(-1)},
+      {id:'i3',text:'Hook: Das würde ich nie wieder kaufen',at:day(-2)},
+      {id:'i4',text:'Kollab mit einem anderen Creator',at:day(-4)},
+      {id:'i5',text:'Flohmarkt-Challenge mit 20 Euro',at:day(-5)},
+      {id:'i6',text:'Get ready with me vor dem Dreh',at:day(-9),video:'v2'}
+    ],
+    events:[
+      {id:'e1',type:'dreh',title:'Flohmarkt-Haul',date:day(late?1:0),time:`${pad(soon)}:00`,video:'v1'},
+      {id:'e2',type:'call',title:'Call mit Marke C',date:day(3),time:'10:00'},
+      {id:'e3',type:'deadline',title:'Skript an Marke A',date:day(5),time:''},
+      {id:'e4',type:'posting',title:'Get ready with me geht online',date:day(6),time:'18:00'},
+      {id:'e5',type:'dreh',title:'Reel für Marke C',date:day(8),time:'11:00',video:'v3'}
+    ],
+    deals:[
+      {id:'d1',brand:'Marke A',stage:'neu',line:'Neue Anfrage für ein Reel',next:'Philip prüft die Anfrage',summary:'Möchte im Dezember ein Reel mit dir machen. Das Budget steht noch nicht fest.',money:null,draft:null},
+      {id:'d2',brand:'Marke B',stage:'frei',line:'Antwort ist vorbereitet',next:'Philip gibt die Antwort frei',summary:'Fragt nach deinen Preisen für zwei Stories.',money:'1.200 €',draft:'Hallo Team von Marke B,\n\ndanke für eure Anfrage. Zwei Stories sind möglich. Schickt uns bitte euer Briefing und den gewünschten Zeitraum.\n\nViele Grüße\nPhilip'},
+      {id:'d3',brand:'Marke C',stage:'lauf',line:'Reel ist im Schnitt',next:'Schnitt fertigstellen',summary:'Ein Reel ist vereinbart. Der Dreh ist gelaufen.',money:'2.000 €',draft:null,video:'v3'},
+      {id:'d4',brand:'Marke D',stage:'geld',line:'Video ist online',next:'Rechnung ist noch offen',summary:'Das Video ist online. Die Zahlung steht aus.',money:'800 €',draft:null}
+    ],
+    spam:6
+  };
+}
+const KEY='gpc-proto-v1';
+let S=seed(), V={tab:'heute',video:null,test:false,dayPick:null,filter:'alle',uploading:null,tests:[]};
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch{}};
+const load=()=>{try{const raw=localStorage.getItem(KEY);if(raw){const d=JSON.parse(raw);if(d&&d.videos)S=d}}catch{}};
+
+const STATUS={leer:['Noch leer','leer',0],material:['Material da','mat',.34],schnitt:['Im Schnitt','schnitt',.67],online:['Online','online',1]};
+const STAGE={neu:['Neu','neu'],frei:['Freigabe','frei'],lauf:['Läuft','lauf'],geld:['Abrechnen','geld']};
+const TYPE={dreh:['Dreh',COL.pink],call:['Call',COL.butter],deadline:['Deadline','#FF9A3D'],posting:['Posting',COL.clover]};
+const me=()=>S.role==='creator';
+const other=()=>me()?'Philip':'GPC';
+const video=id=>S.videos.find(v=>v.id===id);
+const deal=id=>S.deals.find(d=>d.id===id);
+const byWhen=(a,b)=>(a.date+(a.time||'99')).localeCompare(b.date+(b.time||'99'));
+const upcoming=()=>S.events.filter(e=>dayDiff(e.date)>=0).sort(byWhen);
+
+/* ---------- Ansichten ---------- */
+const VIEW={
+ heute(){
+  const nx=upcoming()[0],mine=S.todos.filter(t=>t.who===S.role||(S.role==='creator'&&t.who==='creator')),theirs=S.todos.filter(t=>!mine.includes(t)),open=mine.filter(t=>!t.done).length;
+  const big=nx?(nx.time||`${parse(nx.date).getDate()}.${parse(nx.date).getMonth()+1}.`):'';
+  const row=(t,canCheck)=>{
+    const body=`<span class="grow"><b>${esc(t.text)}</b><small>${esc(t.when)}</small></span>`;
+    const jump=t.video?`data-do="open-video" data-id="${t.video}"`:t.deal?`data-do="deal" data-id="${t.deal}"`:'';
+    return `<div class="row${t.done?' done':''}">${canCheck?`<button class="cb" data-do="todo" data-id="${t.id}" aria-pressed="${!!t.done}" aria-label="${esc(t.text)} erledigt">${check()}</button>`:`<span class="dot">${I.wait}</span>`}${jump?`<button class="grow" ${jump}>${body}</button>`:body}</div>`};
+  return `<div class="head"><h1 class="title">Heute</h1><p class="sub">${fmt(base,{weekday:'long',day:'numeric',month:'long'})}</p></div>
+  ${nx?`<button class="hero" data-do="${nx.video?'open-video':'tab'}" data-id="${nx.video||''}" data-tab="kalender" aria-label="Als Nächstes: ${esc(TYPE[nx.type][0])}, ${esc(nx.title)}, ${esc(rel(nx.date))} ${esc(nx.time)}"><span class="sewn">Als Nächstes</span><canvas data-knit="hero" data-in aria-hidden="true"></canvas></button>
+  <p class="cap">${esc(nx.title)}<small>${esc(rel(nx.date))}${nx.time?`, ${nx.time} Uhr`:''}</small></p>`:''}
+  <section><h2 class="h2">Bei dir <span class="count">${open}</span></h2>${mine.map(t=>row(t,true)).join('')||'<p class="sub">Alles erledigt.</p>'}</section>
+  <section><h2 class="h2">Bei ${other()}</h2>${theirs.map(t=>row(t,false)).join('')}</section>`;
+ },
+ videos(){
+  if(V.test)return viewTest();
+  if(V.video)return viewVideo(video(V.video));
+  const list=S.videos.map(v=>{const st=STATUS[v.status],d=v.deal&&deal(v.deal);
+   return `<button class="row" data-do="open-video" data-id="${v.id}"><span class="mini"><canvas data-knit="mini" data-p="${st[2]}" data-c="${d?COL.clover:COL.pink}" aria-hidden="true"></canvas></span><span class="grow"><b>${esc(v.title)}</b><small>${d?`Für ${esc(d.brand)}`:'Eigener Content'}, ${v.clips.length?`${v.clips.length} ${v.clips.length===1?'Clip':'Clips'}`:'noch kein Material'}</small></span><span class="pill ${st[1]}">${st[0]}</span></button>`}).join('');
+  return `<div class="head"><h1 class="title">Videos</h1></div>
+  <button class="btn" data-do="new-video">${I.plus}Neues Video</button>
+  <button class="hint" data-do="open-test">${I.test}<span>Handy-Test<small>Bleibt dein Video beim Hochladen im Original?</small></span></button>
+  <section>${list}</section>`;
+ },
+ ideen(){
+  const open=S.ideas.filter(i=>!i.video).sort((a,b)=>b.at.localeCompare(a.at)),done=S.ideas.filter(i=>i.video);
+  return `<div class="head"><h1 class="title">Ideen</h1></div>
+  <form class="pad" data-form="idea"><label class="sr" for="idea-text">Neue Idee</label><textarea id="idea-text" placeholder="Was willst du als Nächstes machen?" rows="3" maxlength="240"></textarea><p class="err" id="idea-err" hidden>Schreib erst deine Idee auf.</p><button class="btn" type="submit">Idee speichern</button></form>
+  ${open.length?`<div class="wall" id="wall">${open.map(i=>sticker(i)).join('')}</div>`:'<p class="sub">Noch keine offene Idee. Schreib die erste oben auf.</p>'}
+  ${done.length?`<section><h2 class="h2" style="margin-bottom:10px">Schon gedreht</h2><div class="wall">${done.map(i=>sticker(i,true)).join('')}</div></section>`:''}`;
+ },
+ kalender(){
+  const dow=(base.getDay()+6)%7,week=[...Array(7)].map((_,i)=>day(i-dow));
+  const has=d=>S.events.some(e=>e.date===d);
+  const list=(V.dayPick?S.events.filter(e=>e.date===V.dayPick).sort(byWhen):upcoming());
+  const groups=[...new Set(list.map(e=>e.date))];
+  return `<div class="head"><h1 class="title">Kalender</h1><p class="sub">${fmt(base,{month:'long',year:'numeric'})}</p></div>
+  <div class="week">${week.map(d=>`<button class="day${has(d)?' has':''}${d===day(0)?' today':''}" data-do="day" data-id="${d}" aria-pressed="${V.dayPick===d}" aria-label="${fmt(parse(d),{weekday:'long',day:'numeric',month:'long'})}${has(d)?', mit Termin':''}"><span>${fmt(parse(d),{weekday:'short'}).replace('.','')}</span><b>${parse(d).getDate()}</b><i></i></button>`).join('')}</div>
+  <button class="btn" data-do="new-event">${I.plus}Termin eintragen</button>
+  <section>${groups.length?groups.map(g=>`<p class="grp">${esc(rel(g))}</p>${list.filter(e=>e.date===g).map(e=>`<button class="row" ${e.video?`data-do="open-video" data-id="${e.video}"`:'data-do="event" data-id="'+e.id+'"'}><span class="ty" style="--c:${TYPE[e.type][1]}"></span><span class="when">${e.time?`<b>${e.time}</b>`:'<small>Ganzer Tag</small>'}</span><span class="grow"><b>${esc(e.title)}</b><small>${TYPE[e.type][0]}</small></span></button>`).join('')}`).join(''):`<p class="sub">An diesem Tag ist nichts eingetragen.</p>`}</section>
+  ${V.dayPick?'<button class="link" data-do="day-all">Alle Termine zeigen</button>':''}
+  <p class="sub">Neue Termine landen später automatisch im Google Kalender.</p>`;
+ },
+ deals(){
+  const f=V.filter,list=S.deals.filter(d=>f==='alle'||d.stage===f);
+  const chip=(k,l)=>`<button class="chip" data-do="filter" data-id="${k}" aria-pressed="${f===k}">${l}</button>`;
+  return `<div class="head"><h1 class="title">Deals</h1><p class="sub">${S.spam} Spam-Mails aussortiert</p></div>
+  <div class="chips">${chip('alle','Alle')}${chip('neu','Neu')}${chip('frei','Freigabe')}${chip('lauf','Läuft')}${chip('geld','Abrechnen')}</div>
+  <div class="deals">${list.map(d=>`<button class="deal" data-do="deal" data-id="${d.id}"><span class="t"><span class="n">${esc(d.brand)}</span><span class="pill ${STAGE[d.stage][1]}">${STAGE[d.stage][0]}</span></span><small>${esc(d.line)}</small>${!me()&&d.money?`<small class="m">${esc(d.money)}</small>`:''}</button>`).join('')||'<p class="sub">Hier ist gerade nichts.</p>'}</div>`;
+ }
+};
+function sticker(i,gone){
+  const P=[[COL.pink,COL.plum,'rgba(43,10,51,.4)'],[COL.plum,COL.wool,'rgba(255,243,248,.42)'],[COL.wool,COL.plum,'rgba(43,10,51,.32)'],[COL.cobalt,COL.wool,'rgba(255,243,248,.46)'],[COL.clover,COL.plum,'rgba(43,10,51,.4)']];
+  const h=[...i.id].reduce((a,c)=>a*31+c.charCodeAt(0)>>>0,7),[c,t,o]=P[h%P.length],r=((h>>3)%5-2)*.8;
+  const v=gone&&video(i.video);
+  return `<button class="st${gone?' gone':''}${V.freshIdea===i.id?' slap':''}" data-do="idea" data-id="${i.id}" style="--c:${c};--t:${t};--o:${o};--r:${r}deg">${esc(i.text)}<small>${gone?(v?`Wurde zu ${esc(v.title)}`:'Gedreht'):esc(rel(i.at))}</small></button>`;
+}
+function viewVideo(v){
+  if(!v){V.video=null;return VIEW.videos()}
+  const d=v.deal&&deal(v.deal),up=V.uploading&&V.uploading.id===v.id;
+  return `<button class="back" data-do="back">${I.back}Alle Videos</button>
+  <div class="head"><h1 class="title small">${esc(v.title)}</h1><p class="sub">${d?`Für ${esc(d.brand)}`:'Eigener Content'}</p></div>
+  <div class="patch" id="patch"><canvas data-knit="title" ${v.clips.length?'data-in':'data-p="0"'} aria-hidden="true"></canvas></div>
+  ${up?`<div class="prog"><span id="up-text">Lädt hoch</span><div class="bar"><i id="up-bar"></i></div><span class="note">App offen lassen, bis alles fertig ist.</span></div>`:`<button class="btn" data-do="pick">${I.up}Rohmaterial hochladen</button>`}
+  <button class="btn ghost" data-do="drive">${I.out}Google Drive öffnen</button>
+  ${up?'':'<button class="link" data-do="sim">Upload ohne Datei ausprobieren</button>'}
+  <section><h2 class="h2">Clips <span class="count">${v.clips.length}</span></h2>${v.clips.length?v.clips.map(c=>`<div class="row"><span class="grow"><b>${esc(c.name)}</b></span><span class="note">${size(c.mb)}</span></div>`).join(''):'<p class="sub" style="padding-top:6px">Noch nichts hochgeladen. Dann wird der Titel oben eingestrickt.</p>'}</section>
+  <section><h2 class="h2" style="margin-bottom:10px">Stand</h2><div class="chips">${Object.entries(STATUS).map(([k,s])=>`<button class="chip" data-do="status" data-id="${k}" aria-pressed="${v.status===k}">${s[0]}</button>`).join('')}</div></section>`;
+}
+function viewTest(){
+  return `<button class="back" data-do="back">${I.back}Alle Videos</button>
+  <div class="head"><h1 class="title small">Handy-Test</h1><p class="sub">Zeigt, ob dein Handy ein Video beim Auswählen verkleinert. Es wird nichts hochgeladen.</p></div>
+  <ol class="steps"><li>Wähle ein Video mit mindestens einer Minute Länge.</li><li>Nimm es zuerst aus den Fotos.</li><li>Trag die Größe aus der Fotos-App ein.</li></ol>
+  <button class="btn" data-do="test-pick">${I.film}Video auswählen</button>
+  <p class="note">Tipp: Wenn beim Auswählen „Wird komprimiert“ erscheint, ist das schon ein Hinweis. Wiederhole den Test danach über „Datei auswählen“.</p>
+  ${V.tests.map(testCard).join('')}`;
+}
+function testCard(t,i){
+  const v=t.verdict;
+  return `<div class="card"><p class="h2">Test ${i+1}</p><dl class="res"><dt>Datei</dt><dd>${esc(t.name)}</dd><dt>Größe hier</dt><dd>${size(t.mb)}</dd><dt>Format</dt><dd>${esc(t.type||'unbekannt')}</dd><dt>Auflösung</dt><dd>${t.w?`${t.w} × ${t.h}`:'nicht lesbar'}</dd><dt>Länge</dt><dd>${t.sec?`${Math.floor(t.sec/60)}:${pad(Math.round(t.sec%60))} Min.`:'nicht lesbar'}</dd>${t.sec?`<dt>Pro Minute</dt><dd>${size(t.mb/(t.sec/60))}</dd>`:''}</dl>
+  ${t.name.toLowerCase().startsWith('trim.')?'<p class="verdict hm">Der Dateiname beginnt mit „trim.“. Das deutet auf eine verkleinerte Kopie hin.</p>':''}
+  <form class="field" data-form="compare" data-id="${i}"><label for="fotos-${i}">Größe laut Fotos-App</label><input id="fotos-${i}" inputmode="text" autocomplete="off" placeholder="1,2 GB oder 850 MB" value="${esc(t.photos||'')}"><span class="note">In Fotos das Video öffnen und nach oben wischen.</span><p class="err" id="cmp-err-${i}" hidden>Schreib die Größe so: 1,2 GB oder 850 MB.</p><button class="btn" type="submit" style="margin-top:6px">Vergleichen</button></form>
+  ${v?`<p class="verdict ${v.ok?'ok':'bad'}">${esc(v.text)}</p><button class="btn ghost" data-do="test-copy" data-id="${i}">Ergebnis kopieren</button>${V.copyFail===i?`<div class="field"><label for="copy-${i}">Bitte markieren und kopieren</label><textarea id="copy-${i}" rows="6" readonly>${esc(testText(t))}</textarea></div>`:''}`:''}</div>`;
+}
+const testText=t=>[`Handy-Test ${fmt(new Date(),{day:'numeric',month:'numeric',year:'numeric'})}`,`Gerät: ${navigator.userAgent}`,`Datei: ${t.name}`,`Größe in der App: ${size(t.mb)}`,`Größe laut Fotos: ${t.photos||'nicht eingetragen'}`,`Format: ${t.type||'unbekannt'}`,`Auflösung: ${t.w?`${t.w} × ${t.h}`:'nicht lesbar'}`,`Länge: ${t.sec?Math.round(t.sec)+' Sekunden':'nicht lesbar'}`,`Ergebnis: ${t.verdict?t.verdict.text:'offen'}`].join('\n');
+
+/* ---------- Rendern ---------- */
+const view=$('#view'),app=$('#app'),hem=$('#hem'),layer=$('#layer');
+const TABS=[['heute','Heute',I.sun],['videos','Videos',I.film],['ideen','Ideen',null],['kalender','Kalender',I.cal],['deals','Deals',I.bag]];
+hem.innerHTML=TABS.map(([k,l,ic])=>`<button class="tab" data-do="tab" data-tab="${k}">${ic?`<span class="ico">${ic}</span>`:`<span class="knob">${knob(COL.butter,COL.pink)}</span>`}<span>${l}</span></button>`).join('');
+let knits=[];
+function mountKnits(fresh){
+  knits.forEach(k=>k.ro&&k.ro.disconnect());knits=[];
+  $$('canvas[data-knit]',view).forEach(cv=>{
+    const kind=cv.dataset.knit;let spec;
+    if(kind==='hero'){const nx=upcoming()[0];spec={kind,top:TYPE[nx.type][0].toUpperCase(),big:nx.time||`${parse(nx.date).getDate()}.${parse(nx.date).getMonth()+1}.`,yarn:[COL.plum,COL.butter,COL.pink]}}
+    else if(kind==='title'){const v=video(V.video);spec={kind,title:v.title,yarn:[COL.pink,COL.plum,COL.butter],p:cv.dataset.p?+cv.dataset.p:1}}
+    else spec={kind:'mini',yarn:[cv.dataset.c],p:+cv.dataset.p};
+    const k=new Knit(cv,spec);k.kind=kind;knits.push(k);
+    if(fresh&&cv.hasAttribute('data-in'))k.knit(kind==='hero'?760:560);
+  });
+}
+function paint(fresh){
+  const y=view.scrollTop;
+  app.dataset.world=V.tab;
+  $('#theme').content=WORLD[V.tab];
+  view.innerHTML=VIEW[V.tab]();
+  view.scrollTop=fresh?0:y;
+  $$('.tab',hem).forEach(t=>t.dataset.tab===V.tab?t.setAttribute('aria-current','page'):t.removeAttribute('aria-current'));
+  mountKnits(fresh);
+  V.freshIdea=null;
+  if(V.uploading&&V.uploading.id===V.video)updateUpload();
+}
+function go(tab,from){
+  const change=()=>{V.tab=tab;V.video=null;V.test=false;V.dayPick=null;paint(true);if(location.protocol!=='data:')try{location.hash=tab}catch{}};
+  if(tab===V.tab&&!V.video&&!V.test)return;
+  if(calm||!document.startViewTransition||!from||document.hidden){change();return}
+  const r=from.getBoundingClientRect(),x=r.left+r.width/2,y=r.top+r.height/2,R=Math.hypot(Math.max(x,innerWidth-x),Math.max(y,innerHeight-y));
+  const vt=document.startViewTransition(change);
+  vt.ready.then(()=>document.documentElement.animate({clipPath:[`circle(0px at ${x}px ${y}px)`,`circle(${R}px at ${x}px ${y}px)`]},{duration:520,easing:'cubic-bezier(.22,.9,.3,1)',pseudoElement:'::view-transition-new(root)'})).catch(()=>{});
+}
+let toastT;function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>e.classList.remove('on'),2600)}
+function burst(from){
+  if(calm)return;const box=app.getBoundingClientRect(),r=from.getBoundingClientRect(),x=r.left+r.width/2-box.left,y=r.top+r.height/2-box.top,cols=[COL.pink,COL.butter,COL.clover,COL.wool,'#8C96FF'];
+  for(let i=0;i<18;i++){const p=document.createElement('i');p.className='pop';p.style.cssText=`left:${x}px;top:${y}px;--c:${cols[i%5]}`;app.append(p);
+   const a=Math.random()*Math.PI*2,d=70+Math.random()*130,dx=Math.cos(a)*d,dy=Math.sin(a)*d-40;
+   p.animate([{transform:'translate(-50%,-50%) scale(.4)',opacity:1},{transform:`translate(calc(-50% + ${dx}px),calc(-50% + ${dy}px)) rotate(${Math.random()*360}deg) scale(1)`,opacity:1,offset:.6},{transform:`translate(calc(-50% + ${dx*1.1}px),calc(-50% + ${dy+150}px)) rotate(${Math.random()*720}deg) scale(.9)`,opacity:0}],{duration:1000+Math.random()*400,easing:'cubic-bezier(.2,.7,.4,1)'}).onfinish=()=>p.remove()}
+}
+
+/* ---------- Bögen ---------- */
+let lastFocus=null,closeT;
+function sheet(label,html,focusSel){
+  clearTimeout(closeT);lastFocus=document.activeElement;
+  layer.innerHTML=`<div class="scrim" data-do="close"></div><div class="sheet" role="dialog" aria-modal="true" aria-label="${esc(label)}" tabindex="-1"><button class="x" data-do="close" aria-label="Schließen">${I.x}</button>${html}</div>`;
+  layer.offsetHeight;layer.classList.add('open');
+  const f=focusSel?$(focusSel,layer):$('.sheet',layer);f&&f.focus({preventScroll:true});
+}
+function closeSheet(){layer.classList.remove('open');closeT=setTimeout(()=>{layer.innerHTML=''},calm?0:340);lastFocus&&lastFocus.isConnected&&lastFocus.focus({preventScroll:true})}
+function protoSheet(){
+  sheet('Prototyp',`<h2>Das ist ein Prototyp</h2><p>Alle Inhalte sind Beispiele. Gmail, Kalender und Drive sind noch nicht verbunden. Es wird nichts gesendet und nichts hochgeladen.</p>
+  <div class="field"><span class="lab">Ansicht</span><div class="seg"><button data-do="role" data-id="creator" aria-pressed="${me()}">German Pink Cardigan</button><button data-do="role" data-id="philip" aria-pressed="${!me()}">Philip</button></div></div>
+  <button class="btn" data-do="open-test">Handy-Test starten</button><button class="btn ghost" data-do="reset">Beispieldaten zurücksetzen</button>`);
+}
+function newVideoSheet(preset,ideaId){
+  sheet('Neues Video',`<h2>Neues Video</h2><form data-form="video" data-idea="${ideaId||''}" style="display:contents"><div class="field"><label for="v-title">Titel</label><input id="v-title" maxlength="60" autocomplete="off" placeholder="Wie heißt das Video?" value="${esc(preset||'')}"><p class="err" id="v-err" hidden>Gib dem Video einen Titel.</p></div>
+  <div class="field"><label for="v-deal">Für eine Kooperation?</label><select id="v-deal"><option value="">Nein, eigener Content</option>${S.deals.map(d=>`<option value="${d.id}">${esc(d.brand)}</option>`).join('')}</select></div>
+  <button class="btn" type="submit">Video anlegen</button></form><p class="note">Der Drive-Ordner wird dann automatisch angelegt.</p>`,preset?null:'#v-title');
+}
+function eventSheet(){
+  sheet('Neuer Termin',`<h2>Neuer Termin</h2><form data-form="event" style="display:contents"><div class="field"><label for="e-title">Was steht an?</label><input id="e-title" maxlength="60" autocomplete="off" placeholder="Dreh, Call, Deadline"><p class="err" id="e-err" hidden>Schreib kurz auf, was ansteht.</p></div>
+  <div class="field"><label for="e-type">Art</label><select id="e-type">${Object.entries(TYPE).map(([k,t])=>`<option value="${k}">${t[0]}</option>`).join('')}</select></div>
+  <div class="two"><div class="field"><label for="e-date">Tag</label><input id="e-date" type="date" value="${V.dayPick||day(1)}"></div><div class="field"><label for="e-time">Uhrzeit</label><input id="e-time" type="time" value="12:00"></div></div>
+  <button class="btn" type="submit">Termin eintragen</button></form>`,'#e-title');
+}
+function dealSheet(d){
+  const v=d.video&&video(d.video);
+  const act=d.stage==='frei'?(me()?`<p class="fold">${I.wait}Wartet auf Freigabe von Philip</p>`:`<button class="btn" data-do="approve" data-id="${d.id}">Freigeben und senden</button><button class="btn ghost" data-do="close">Noch nicht</button>`):'';
+  sheet(d.brand,`<h2>${esc(d.brand)}</h2><span class="pill ${STAGE[d.stage][1]}" style="align-self:flex-start">${STAGE[d.stage][0]}</span>
+  <div class="field"><span class="lab">Aus der Mail</span><p>${esc(d.summary)}</p></div><div class="field"><span class="lab">Nächster Schritt</span><p>${esc(d.next)}</p></div>
+  ${!me()&&d.money?`<div class="field"><span class="lab">Betrag</span><p>${esc(d.money)}</p></div>`:''}
+  ${d.draft?`<div class="field"><span class="lab">Antwortentwurf</span><p class="quote">${esc(d.draft)}</p></div>`:''}${act}
+  ${v?`<button class="btn ghost" data-do="open-video" data-id="${v.id}">Zum Video</button>`:''}
+  <p class="note">In der echten App öffnet ein Button die Mail in Gmail.</p>`);
+}
+function driveSheet(v){
+  const m=fmt(new Date(),{year:'numeric'});
+  sheet('Google Drive',`<h2>Google Drive</h2><p>Hier springt die echte App direkt in genau diesen Ordner:</p><p class="fold">${I.folder}<span>Videos / ${m} / ${esc(v.title)}</span></p><p class="note">Im Prototyp ist noch nichts verbunden, deshalb bleibt dieser Button hier stehen.</p><button class="btn" data-do="close">Verstanden</button>`);
+}
+function ideaSheet(i){
+  const v=i.video&&video(i.video);
+  sheet('Idee',`<h2>Idee</h2><form data-form="idea-edit" data-id="${i.id}" style="display:contents"><div class="field"><label class="sr" for="i-text">Text der Idee</label><textarea id="i-text" rows="3" maxlength="240">${esc(i.text)}</textarea></div>
+  ${v?`<button class="btn ghost" type="button" data-do="open-video" data-id="${v.id}">Zum Video</button>`:`<button class="btn" type="button" data-do="idea-video" data-id="${i.id}">${I.film}Video daraus machen</button>`}
+  <button class="btn ghost" type="submit">Änderung speichern</button><button class="link" type="button" data-do="idea-del" data-id="${i.id}">Idee löschen</button></form>`);
+}
+
+/* ---------- Upload-Simulation und Handy-Test ---------- */
+function startUpload(id,files){
+  const total=files.reduce((a,f)=>a+f.mb,0),ms=calm?400:Math.min(6500,2600+files.length*900);
+  V.uploading={id,files,p:0,t0:performance.now(),ms,total};paint(false);
+  const k=knits.find(x=>x.kind==='title');k&&k.set(0);
+  const tick=()=>{const u=V.uploading;if(!u)return;u.p=Math.min(1,(performance.now()-u.t0)/u.ms);updateUpload();if(u.p<1)setTimeout(tick,50);else finishUpload()};
+  tick();
+}
+function updateUpload(){
+  const u=V.uploading;if(!u)return;
+  const k=knits.find(x=>x.kind==='title'),bar=$('#up-bar'),txt=$('#up-text'),i=Math.min(u.files.length,Math.floor(u.p*u.files.length)+1);
+  if(k)k.set(u.p);if(bar)bar.style.width=`${Math.round(u.p*100)}%`;if(txt)txt.textContent=`Datei ${i} von ${u.files.length}, ${Math.round(u.p*100)} %`;
+}
+function finishUpload(){
+  const u=V.uploading,v=video(u.id);V.uploading=null;v.clips.push(...u.files);if(v.status==='leer')v.status='material';save();
+  S.todos.filter(t=>t.video===v.id).forEach(t=>t.done=true);save();
+  if(V.tab==='videos'&&V.video===v.id){paint(false);const p=$('#patch');if(p){p.insertAdjacentHTML('beforeend',`<div class="stamp">${burstStar()}<span>Fertig</span></div>`);const st=$('.stamp',p);if(!calm)st.animate([{transform:'scale(2.2) rotate(-30deg)',opacity:0},{transform:'scale(1) rotate(0)',opacity:1}],{duration:380,easing:'cubic-bezier(.34,1.56,.64,1)'});burst(p)}}
+  toast(`Simulation fertig: ${u.files.length} ${u.files.length===1?'Clip':'Clips'} eingestrickt, nichts wurde hochgeladen.`);
+}
+function videoMeta(file){return new Promise(res=>{const el=document.createElement('video'),url=URL.createObjectURL(file);let done=false;const end=r=>{if(done)return;done=true;URL.revokeObjectURL(url);res(r)};el.preload='metadata';el.muted=true;el.playsInline=true;el.onloadedmetadata=()=>end({w:el.videoWidth,h:el.videoHeight,sec:isFinite(el.duration)?el.duration:0});el.onerror=()=>end({});setTimeout(()=>end({}),5000);el.src=url;try{el.load()}catch{end({})}})}
+function parseSize(s){const m=String(s).trim().replace(',','.').match(/^([\d.]+)\s*(gb|mb|kb)?$/i);if(!m)return null;const n=parseFloat(m[1]);if(!isFinite(n)||n<=0)return null;const u=(m[2]||'mb').toLowerCase();return u==='gb'?n*1000:u==='kb'?n/1000:n}
+
+/* ---------- Aktionen ---------- */
+const DO={
+ tab(el){go(el.dataset.tab,el)},
+ proto(){protoSheet()},
+ close(){closeSheet()},
+ role(el){S.role=el.dataset.id;save();closeSheet();paint(false);toast(me()?'Du siehst die App als German Pink Cardigan.':'Du siehst die App als Philip.')},
+ reset(){S=seed();save();closeSheet();V.video=null;V.test=false;V.tests=[];paint(true);toast('Beispieldaten sind zurückgesetzt.')},
+ todo(el){const t=S.todos.find(x=>x.id===el.dataset.id);t.done=!t.done;save();el.setAttribute('aria-pressed',t.done);el.closest('.row').classList.toggle('done',t.done);const c=$('.count',view);if(c)c.textContent=S.todos.filter(x=>x.who===S.role&&!x.done).length;if(t.done&&!calm)burst(el)},
+ 'open-video'(el){const id=el.dataset.id;closeSheet();V.tab='videos';V.video=id;V.test=false;paint(true)},
+ back(){V.video=null;V.test=false;paint(true)},
+ 'new-video'(){newVideoSheet()},
+ pick(){$('#picker').click()},
+ sim(){const v=video(V.video);const n=v.clips.length;startUpload(v.id,[{name:`IMG_${3100+n}.MOV`,mb:980},{name:`IMG_${3101+n}.MOV`,mb:1340},{name:`IMG_${3102+n}.MOV`,mb:515}])},
+ drive(){driveSheet(video(V.video))},
+ status(el){const v=video(V.video);v.status=el.dataset.id;save();paint(false)},
+ idea(el){ideaSheet(S.ideas.find(i=>i.id===el.dataset.id))},
+ 'idea-video'(el){const i=S.ideas.find(x=>x.id===el.dataset.id);newVideoSheet(i.text.slice(0,60),i.id)},
+ 'idea-del'(el){const idx=S.ideas.findIndex(x=>x.id===el.dataset.id);S.ideas.splice(idx,1);save();closeSheet();paint(false);toast('Idee gelöscht.')},
+ day(el){V.dayPick=V.dayPick===el.dataset.id?null:el.dataset.id;paint(false)},
+ 'day-all'(){V.dayPick=null;paint(false)},
+ 'new-event'(){eventSheet()},
+ event(el){const e=S.events.find(x=>x.id===el.dataset.id);sheet(e.title,`<h2>${esc(e.title)}</h2><p>${esc(rel(e.date))}${e.time?`, ${e.time} Uhr`:''}</p><p class="note">${TYPE[e.type][0]}. In der echten App steht dieser Termin im Google Kalender.</p><button class="btn" data-do="close">Verstanden</button>`)},
+ deal(el){dealSheet(deal(el.dataset.id))},
+ approve(el){const d=deal(el.dataset.id);d.stage='lauf';d.line='Antwort ist freigegeben';d.next='Warten auf Rückmeldung';d.draft=null;S.todos=S.todos.filter(t=>t.deal!==d.id);save();closeSheet();paint(false);toast('Freigegeben. Im Prototyp wird nichts gesendet.')},
+ filter(el){V.filter=el.dataset.id;paint(false)},
+ 'open-test'(){closeSheet();V.tab='videos';V.video=null;V.test=true;paint(true)},
+ 'test-pick'(){$('#test-picker').click()},
+ 'test-copy'(el){const i=+el.dataset.id,t=V.tests[i];const fail=()=>{V.copyFail=i;paint(false)};try{navigator.clipboard.writeText(testText(t)).then(()=>toast('Ergebnis kopiert.'),fail)}catch{fail()}}
+};
+const FORM={
+ gate(f){const inp=$('#gate-pass',f),err=$('#gate-err',f),gate=$('#gate');
+  if(gateHash(inp.value.trim().toLowerCase())!==GATE){err.hidden=false;inp.value='';inp.focus();if(!calm)f.animate([{transform:'translateX(0)'},{transform:'translateX(-9px)'},{transform:'translateX(9px)'},{transform:'translateX(-5px)'},{transform:'translateX(0)'}],{duration:320});return}
+  try{localStorage.setItem(GATE_KEY,String(GATE))}catch{}
+  inp.blur();start(bootData);
+  if(calm){gate.remove();return}
+  gate.animate([{transform:'translateY(0)'},{transform:'translateY(-102%)'}],{duration:520,easing:'cubic-bezier(.6,0,.2,1)',fill:'forwards'}).onfinish=()=>gate.remove();
+  setTimeout(()=>gate.remove(),900)},
+ idea(f){const ta=$('#idea-text',f),err=$('#idea-err',f),t=ta.value.trim();if(!t){err.hidden=false;ta.focus();return}const id='i'+Date.now();S.ideas.unshift({id,text:t,at:day(0)});save();V.freshIdea=id;paint(false);toast('Idee gespeichert.');const b=$('#wall');b&&!calm&&b.animate([{transform:'translateY(0)'},{transform:'translateY(5px)'},{transform:'translateY(0)'}],{duration:220,delay:150})},
+ 'idea-edit'(f){const i=S.ideas.find(x=>x.id===f.dataset.id),t=$('#i-text',f).value.trim();if(t){i.text=t;save()}closeSheet();paint(false)},
+ video(f){const tt=$('#v-title',f),t=tt.value.trim();if(!t){$('#v-err',f).hidden=false;tt.focus();return}const id='v'+Date.now(),dealId=$('#v-deal',f).value||null;S.videos.unshift({id,title:t,deal:dealId,status:'leer',clips:[]});
+  if(f.dataset.idea){const i=S.ideas.find(x=>x.id===f.dataset.idea);if(i)i.video=id}save();closeSheet();V.tab='videos';V.video=id;V.test=false;paint(true);toast('Video angelegt. Der Drive-Ordner wird hier nur simuliert.')},
+ event(f){const tt=$('#e-title',f),t=tt.value.trim();if(!t){$('#e-err',f).hidden=false;tt.focus();return}S.events.push({id:'e'+Date.now(),type:$('#e-type',f).value,title:t,date:$('#e-date',f).value||day(1),time:$('#e-time',f).value||''});save();closeSheet();paint(false);toast('Termin eingetragen. Google Kalender ist hier noch nicht verbunden.')},
+ compare(f){const i=+f.dataset.id,t=V.tests[i],inp=$('input',f),mb=parseSize(inp.value);if(!mb){$(`#cmp-err-${i}`,f).hidden=false;inp.focus();return}t.photos=inp.value.trim();const diff=(mb-t.mb)/mb,pct=Math.round(Math.abs(diff)*100);t.verdict=Math.abs(diff)<=.05?{ok:true,text:'Original: Die Größe stimmt mit der Fotos-App überein.'}:diff>0?{ok:false,text:`Verkleinert: Hier kommt das Video ${pct} % kleiner an als in der Fotos-App.`}:{ok:false,text:`Abweichung: Hier ist das Video ${pct} % größer als eingetragen. Prüf die Zahl noch einmal.`};paint(false)}
+};
+document.addEventListener('click',e=>{const el=e.target.closest('[data-do]');if(!el)return;const fn=DO[el.dataset.do];if(fn){fn(el,e)}});
+document.addEventListener('submit',e=>{e.preventDefault();const fn=FORM[e.target.dataset.form];fn&&fn(e.target)});
+document.addEventListener('input',e=>{if(e.target.id==='idea-text'){const p=$('#idea-err');if(p)p.hidden=true}if(e.target.id==='v-title'){const p=$('#v-err');if(p)p.hidden=true}if(e.target.id==='e-title'){const p=$('#e-err');if(p)p.hidden=true}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&layer.classList.contains('open'))closeSheet()});
+$('#picker').addEventListener('change',e=>{const fs=[...e.target.files];e.target.value='';if(!fs.length||!V.video)return;startUpload(V.video,fs.map(f=>({name:f.name,mb:f.size/1e6})))});
+$('#test-picker').addEventListener('change',async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;toast('Video wird gelesen.');const m=await videoMeta(f);V.tests.push({name:f.name,mb:f.size/1e6,type:f.type,w:m.w||0,h:m.h||0,sec:m.sec||0});paint(false)});
+addEventListener('hashchange',()=>{const t=location.hash.slice(1);if(WORLD[t]&&t!==V.tab){V.tab=t;V.video=null;V.test=false;paint(true)}});
+if(window.claude?.hot?.snapshot)window.claude.hot.snapshot(()=>S);
+
+/* Sichtschutz fürs Teilen des Prototyps, kein echter Zugriffsschutz: Alle Inhalte stehen im Quelltext. */
+const GATE=3249000435688355,GATE_KEY='gpc-gate-v1';
+function gateHash(str,seed=20261106){let h1=0xdeadbeef^seed,h2=0x41c6ce57^seed;for(let i=0;i<str.length;i++){const c=str.charCodeAt(i);h1=Math.imul(h1^c,2654435761);h2=Math.imul(h2^c,1597334677)}h1=Math.imul(h1^(h1>>>16),2246822507)^Math.imul(h2^(h2>>>13),3266489909);h2=Math.imul(h2^(h2>>>16),2246822507)^Math.imul(h1^(h1>>>13),3266489909);return 4294967296*(2097151&h2)+(h1>>>0)}
+let bootData={};
+function boot(d){
+  bootData=d;let open=false;
+  try{open=localStorage.getItem(GATE_KEY)===String(GATE)}catch{}
+  if(open){$('#gate').remove();start(d);return}
+  new Knit($('#gate-canvas'),{kind:'title',title:'Pink Cardigan',yarn:[COL.pink,COL.plum,COL.butter],p:1}).knit(900);
+}
+function start(d){
+  load();if(d&&d.videos)S=d;
+  const t=location.hash.slice(1);if(WORLD[t])V.tab=t;
+  paint(true);
+}
+if(window.claude?.hot?.ready)window.claude.hot.ready(boot);else boot(window.claude?.hot?.data??{});
+</script>
+</body>
+</html>
