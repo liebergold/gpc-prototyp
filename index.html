@@ -13,7 +13,7 @@
 <style>
 :root{
   /* Patchwork-Cardigan: jeder Bereich ist ein eigener Flicken, Farbe heißt Ort. Grobstrick in der Schrift, echte Maschen im Hero. */
-  --pink:#FF5CA8; --plum:#2B0A33; --butter:#FFE14D; --cobalt:#2F3CF0; --clover:#1FCB82; --wool:#FFF3F8;
+  --pink:#FF5CA8; --plum:#2B0A33; --butter:#FFE14D; --cobalt:#2F3CF0; --clover:#1FCB82; --wool:#FFF3F8; --lilac:#C8B0FF; --violet:#7B3FF2;
   --display:'Gasoek One','Arial Black',Impact,sans-serif;
   --body:'Bricolage Grotesque',ui-rounded,-apple-system,'Segoe UI',Roboto,sans-serif;
   --spring:cubic-bezier(.34,1.56,.64,1);
@@ -34,6 +34,8 @@ svg{display:block}
 .app[data-world=ideen]{--bg:var(--butter);--act:var(--plum);--act-fg:var(--butter)}
 .app[data-world=kalender]{--bg:var(--cobalt);--fg:var(--wool);--soft:rgba(255,243,248,.84);--line:rgba(255,243,248,.38);--act:var(--butter);--act-fg:var(--plum)}
 .app[data-world=deals]{--bg:var(--clover);--act:var(--plum);--act-fg:var(--clover)}
+.app[data-world=f-ayri]{--bg:var(--lilac);--act:var(--plum);--act-fg:var(--lilac)}
+.app[data-world=f-twitch]{--bg:var(--violet);--fg:var(--wool);--soft:rgba(255,243,248,.86);--line:rgba(255,243,248,.38);--act:var(--butter);--act-fg:var(--plum)}
 
 .top{flex:none;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:calc(env(safe-area-inset-top) + 10px) 16px 4px}
 .mark{font-weight:800;font-size:14px;letter-spacing:-.01em;white-space:nowrap}
@@ -195,6 +197,18 @@ section>.h2{margin-bottom:2px}
 .tab:active .knob{transform:scale(.9)}
 .tab[aria-current=page] .knob{transform:rotate(135deg) scale(1.05)}
 
+.shelf{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:0 -16px;padding:22px 16px 14px;background:var(--plum)}
+.subs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px 10px;padding-top:8px}
+.fo{position:relative;display:flex;flex-direction:column;justify-content:flex-end;gap:2px;width:100%;min-height:94px;padding:10px;border-radius:4px 13px 13px 13px;background:var(--c);color:var(--t);font-weight:800;font-size:15px;line-height:1.14;overflow-wrap:anywhere;outline:2px dashed var(--o);outline-offset:-5px;transition:transform .18s var(--spring)}
+.fo::before{content:'';position:absolute;left:0;top:-9px;width:48%;height:11px;border-radius:7px 7px 0 0;background:var(--c)}
+.fo:active{transform:scale(.95)}
+.fo small{font-size:13px;font-weight:600;line-height:1.2}
+.spaces{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;padding-top:8px}
+.sp{position:relative;display:flex;align-items:flex-end;min-height:52px;padding:8px 9px;border-radius:4px 12px 12px 12px;box-shadow:inset 0 0 0 2px var(--fg);font-weight:800;font-size:14px;line-height:1.12;overflow-wrap:anywhere;transition:transform .18s var(--spring)}
+.sp::before{content:'';position:absolute;left:0;top:-7px;width:46%;height:9px;border-radius:6px 6px 0 0;background:var(--c)}
+.sp:active{transform:scale(.95)}
+.sp[aria-pressed=true]{background:var(--c);color:var(--t);box-shadow:none}
+
 .gate{--bg:var(--plum);--fg:var(--wool);--soft:rgba(255,243,248,.78);--act:var(--pink);--act-fg:var(--plum);position:absolute;inset:0;z-index:40;display:flex;flex-direction:column;justify-content:center;gap:20px;padding:calc(env(safe-area-inset-top) + 20px) 20px calc(env(safe-area-inset-bottom) + 20px);background:var(--bg);color:var(--fg);overflow-y:auto}
 .gate-patch{flex:none;transform:rotate(-1.2deg)}
 .gate-patch canvas{display:block;width:100%;border-radius:20px;background:#1B0620}
@@ -245,8 +259,23 @@ const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'
 const pad=n=>String(n).padStart(2,'0');
 const calm=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const DPR=Math.min(window.devicePixelRatio||1,3);
-const COL={pink:'#FF5CA8',plum:'#2B0A33',butter:'#FFE14D',cobalt:'#2F3CF0',clover:'#1FCB82',wool:'#FFF3F8'};
-const WORLD={heute:COL.pink,videos:COL.plum,ideen:COL.butter,kalender:COL.cobalt,deals:COL.clover};
+const COL={pink:'#FF5CA8',plum:'#2B0A33',butter:'#FFE14D',cobalt:'#2F3CF0',clover:'#1FCB82',wool:'#FFF3F8',lilac:'#C8B0FF',violet:'#7B3FF2'};
+const WORLD={heute:COL.pink,videos:COL.plum,ideen:COL.butter,kalender:COL.cobalt,deals:COL.clover,'f-main':COL.pink,'f-ayri':COL.lilac,'f-twitch':COL.violet};
+const TAB_KEYS=['heute','videos','ideen','kalender','deals'];
+
+/* Drei getrennte Ordner: Sie stehen so auch in Google Drive. Nur der Kalender ist gemeinsam. */
+const ROOT='Pink Cardigan App';
+const ACCOUNT_SUBS=[['videos','Videos'],['ideen','Ideen'],['deals','Brand Deals'],['cover','Cover und Grafiken'],['vertrag','Verträge'],['rechnung','Rechnungen']];
+const SPACES={
+ main:{name:'German Pink Cardigan',short:'Pink Cardigan',kind:'Main-Account',c:COL.pink,t:COL.plum,o:'rgba(43,10,51,.42)',item:'Video',subs:ACCOUNT_SUBS},
+ ayri:{name:'Pink the Ayri',short:'Pink the Ayri',kind:'Zweiter Account',c:COL.lilac,t:COL.plum,o:'rgba(43,10,51,.42)',item:'Video',subs:ACCOUNT_SUBS},
+ twitch:{name:'Twitch',short:'Twitch',kind:'Streams',c:COL.violet,t:COL.wool,o:'rgba(255,243,248,.55)',item:'Stream',subs:[['videos','Streams und Clips'],['ideen','Stream-Ideen'],['deals','Sponsoren'],['cover','Overlays und Grafiken'],['vertrag','Verträge'],['rechnung','Rechnungen']]}
+};
+const SPACE_KEYS=Object.keys(SPACES);
+const SAMPLE_FILES={cover:'Cover-Beispiel.png und Profilbild.png',vertrag:'Beispiel-Vertrag.pdf',rechnung:'Beispiel-Rechnung.pdf'};
+const subName=(k,id)=>SPACES[k].subs.find(x=>x[0]===id)[1];
+const drivePath=(k,...rest)=>[ROOT,SPACES[k].name,...rest].join(' / ');
+const spaceStyle=k=>`--c:${SPACES[k].c};--t:${SPACES[k].t};--o:${SPACES[k].o}`;
 
 const base=new Date();base.setHours(12,0,0,0);
 const plus=n=>{const d=new Date(base);d.setDate(d.getDate()+n);return d};
@@ -345,53 +374,70 @@ class Knit{
 
 /* ---------- Beispieldaten ---------- */
 function seed(){
-  const h=new Date().getHours(),late=h>=20,soon=late?10:h+2;
+  const h=new Date().getHours(),late=h>=20,soon=late||h<8?10:h+2;
   return {
     role:'creator',
     todos:[
-      {id:'t1',who:'creator',text:'Skript an Marke A schicken',when:'bis Montag'},
-      {id:'t2',who:'creator',text:'Rohmaterial für Get ready with me hochladen',when:'Heute',video:'v2'},
-      {id:'t3',who:'philip',text:'Antwort an Marke B freigeben',when:'Offen',deal:'d2'},
-      {id:'t4',who:'philip',text:'Rechnung für Marke D nachhalten',when:'Diese Woche',deal:'d4'}
+      {id:'t1',space:'main',who:'creator',text:'Skript an Marke A schicken',when:'bis Montag'},
+      {id:'t2',space:'main',who:'creator',text:'Rohmaterial für Get ready with me hochladen',when:'Heute',video:'v2'},
+      {id:'t5',space:'ayri',who:'creator',text:'Rohmaterial für Outfit der Woche hochladen',when:'bis Mittwoch',video:'v6'},
+      {id:'t6',space:'twitch',who:'creator',text:'Overlay für den Stream prüfen',when:'bis Freitag'},
+      {id:'t3',space:'main',who:'philip',text:'Antwort an Marke B freigeben',when:'Offen',deal:'d2'},
+      {id:'t4',space:'main',who:'philip',text:'Rechnung für Marke D nachhalten',when:'Diese Woche',deal:'d4'},
+      {id:'t7',space:'twitch',who:'philip',text:'Antwort an Marke F freigeben',when:'Offen',deal:'d6'}
     ],
     videos:[
-      {id:'v1',title:'Flohmarkt-Haul',deal:null,status:'material',clips:[{name:'IMG_2041.MOV',mb:812},{name:'IMG_2042.MOV',mb:1420},{name:'IMG_2043.MOV',mb:640},{name:'IMG_2044.MOV',mb:1130}]},
-      {id:'v2',title:'Get ready with me',deal:null,status:'leer',clips:[]},
-      {id:'v3',title:'Reel für Marke C',deal:'d3',status:'schnitt',clips:[{name:'IMG_1988.MOV',mb:1760},{name:'IMG_1989.MOV',mb:905},{name:'IMG_1990.MOV',mb:388}]},
-      {id:'v4',title:'Cardigan-Umstyling',deal:null,status:'online',clips:[{name:'IMG_1902.MOV',mb:2210},{name:'IMG_1903.MOV',mb:730}]}
+      {id:'v1',space:'main',title:'Flohmarkt-Haul',deal:null,status:'material',clips:[{name:'IMG_2041.MOV',mb:812},{name:'IMG_2042.MOV',mb:1420},{name:'IMG_2043.MOV',mb:640},{name:'IMG_2044.MOV',mb:1130}]},
+      {id:'v2',space:'main',title:'Get ready with me',deal:null,status:'leer',clips:[]},
+      {id:'v3',space:'main',title:'Reel für Marke C',deal:'d3',status:'schnitt',clips:[{name:'IMG_1988.MOV',mb:1760},{name:'IMG_1989.MOV',mb:905},{name:'IMG_1990.MOV',mb:388}]},
+      {id:'v4',space:'main',title:'Cardigan-Umstyling',deal:null,status:'online',clips:[{name:'IMG_1902.MOV',mb:2210},{name:'IMG_1903.MOV',mb:730}]},
+      {id:'v5',space:'ayri',title:'Mein Morgen in Pink',deal:null,status:'material',clips:[{name:'IMG_2101.MOV',mb:640},{name:'IMG_2102.MOV',mb:455}]},
+      {id:'v6',space:'ayri',title:'Outfit der Woche',deal:null,status:'leer',clips:[]},
+      {id:'v7',space:'twitch',title:'Stream am Freitag',deal:null,status:'leer',clips:[]},
+      {id:'v8',space:'twitch',title:'Community-Abend',deal:'d6',status:'material',clips:[{name:'Stream_Aufzeichnung.mp4',mb:8400},{name:'Clip_Highlight.mp4',mb:310}]}
     ],
     ideas:[
-      {id:'i1',text:'Omas Cardigan in drei Looks neu stylen',at:day(0)},
-      {id:'i2',text:'Eine Woche nur Pink tragen, jeden Tag ein Clip',at:day(-1)},
-      {id:'i3',text:'Hook: Das würde ich nie wieder kaufen',at:day(-2)},
-      {id:'i4',text:'Kollab mit einem anderen Creator',at:day(-4)},
-      {id:'i5',text:'Flohmarkt-Challenge mit 20 Euro',at:day(-5)},
-      {id:'i6',text:'Get ready with me vor dem Dreh',at:day(-9),video:'v2'}
+      {id:'i1',space:'main',text:'Omas Cardigan in drei Looks neu stylen',at:day(0)},
+      {id:'i2',space:'main',text:'Eine Woche nur Pink tragen, jeden Tag ein Clip',at:day(-1)},
+      {id:'i3',space:'main',text:'Hook: Das würde ich nie wieder kaufen',at:day(-2)},
+      {id:'i4',space:'main',text:'Kollab mit einem anderen Creator',at:day(-4)},
+      {id:'i5',space:'main',text:'Flohmarkt-Challenge mit 20 Euro',at:day(-5)},
+      {id:'i6',space:'main',text:'Get ready with me vor dem Dreh',at:day(-9),video:'v2'},
+      {id:'i7',space:'ayri',text:'Kurze Clips nur mit Text-Hook',at:day(0)},
+      {id:'i8',space:'ayri',text:'Fragerunde aus den Kommentaren',at:day(-1)},
+      {id:'i9',space:'ayri',text:'Drei Teile, die ich jeden Tag trage',at:day(-3)},
+      {id:'i10',space:'twitch',text:'Cozy-Stream am Sonntagabend',at:day(0)},
+      {id:'i11',space:'twitch',text:'Chat stylt mein Outfit live',at:day(-2)},
+      {id:'i12',space:'twitch',text:'Community stimmt über das nächste Video ab',at:day(-6)}
     ],
     events:[
-      {id:'e1',type:'dreh',title:'Flohmarkt-Haul',date:day(late?1:0),time:`${pad(soon)}:00`,video:'v1'},
-      {id:'e2',type:'call',title:'Call mit Marke C',date:day(3),time:'10:00'},
-      {id:'e3',type:'deadline',title:'Skript an Marke A',date:day(5),time:''},
-      {id:'e4',type:'posting',title:'Get ready with me geht online',date:day(6),time:'18:00'},
-      {id:'e5',type:'dreh',title:'Reel für Marke C',date:day(8),time:'11:00',video:'v3'}
+      {id:'e1',space:'main',type:'dreh',title:'Flohmarkt-Haul',date:day(late?1:0),time:`${pad(soon)}:00`,video:'v1'},
+      {id:'e2',space:'main',type:'call',title:'Call mit Marke C',date:day(3),time:'10:00'},
+      {id:'e6',space:'twitch',type:'stream',title:'Stream am Freitag',date:day(4),time:'20:00',video:'v7'},
+      {id:'e3',space:'main',type:'deadline',title:'Skript an Marke A',date:day(5),time:''},
+      {id:'e4',space:'main',type:'posting',title:'Get ready with me geht online',date:day(6),time:'18:00'},
+      {id:'e7',space:'ayri',type:'dreh',title:'Outfit der Woche',date:day(7),time:'15:00',video:'v6'},
+      {id:'e5',space:'main',type:'dreh',title:'Reel für Marke C',date:day(8),time:'11:00',video:'v3'}
     ],
     deals:[
-      {id:'d1',brand:'Marke A',stage:'neu',line:'Neue Anfrage für ein Reel',next:'Philip prüft die Anfrage',summary:'Möchte im Dezember ein Reel mit dir machen. Das Budget steht noch nicht fest.',money:null,draft:null},
-      {id:'d2',brand:'Marke B',stage:'frei',line:'Antwort ist vorbereitet',next:'Philip gibt die Antwort frei',summary:'Fragt nach deinen Preisen für zwei Stories.',money:'1.200 €',draft:'Hallo Team von Marke B,\n\ndanke für eure Anfrage. Zwei Stories sind möglich. Schickt uns bitte euer Briefing und den gewünschten Zeitraum.\n\nViele Grüße\nPhilip'},
-      {id:'d3',brand:'Marke C',stage:'lauf',line:'Reel ist im Schnitt',next:'Schnitt fertigstellen',summary:'Ein Reel ist vereinbart. Der Dreh ist gelaufen.',money:'2.000 €',draft:null,video:'v3'},
-      {id:'d4',brand:'Marke D',stage:'geld',line:'Video ist online',next:'Rechnung ist noch offen',summary:'Das Video ist online. Die Zahlung steht aus.',money:'800 €',draft:null}
+      {id:'d1',space:'main',brand:'Marke A',stage:'neu',line:'Neue Anfrage für ein Reel',next:'Philip prüft die Anfrage',summary:'Möchte im Dezember ein Reel mit dir machen. Das Budget steht noch nicht fest.',money:null,draft:null},
+      {id:'d2',space:'main',brand:'Marke B',stage:'frei',line:'Antwort ist vorbereitet',next:'Philip gibt die Antwort frei',summary:'Fragt nach deinen Preisen für zwei Stories.',money:'1.200 €',draft:'Hallo Team von Marke B,\n\ndanke für eure Anfrage. Zwei Stories sind möglich. Schickt uns bitte euer Briefing und den gewünschten Zeitraum.\n\nViele Grüße\nPhilip'},
+      {id:'d3',space:'main',brand:'Marke C',stage:'lauf',line:'Reel ist im Schnitt',next:'Schnitt fertigstellen',summary:'Ein Reel ist vereinbart. Der Dreh ist gelaufen.',money:'2.000 €',draft:null,video:'v3'},
+      {id:'d4',space:'main',brand:'Marke D',stage:'geld',line:'Video ist online',next:'Rechnung ist noch offen',summary:'Das Video ist online. Die Zahlung steht aus.',money:'800 €',draft:null},
+      {id:'d5',space:'ayri',brand:'Marke E',stage:'neu',line:'Anfrage für zwei Stories',next:'Philip prüft die Anfrage',summary:'Möchte zwei Stories auf deinem zweiten Account.',money:null,draft:null},
+      {id:'d6',space:'twitch',brand:'Marke F',stage:'frei',line:'Sponsoring im Stream',next:'Philip gibt die Antwort frei',summary:'Fragt nach einem Sponsoring im Stream.',money:'600 €',draft:'Hallo Team von Marke F,\n\ndanke für eure Anfrage. Ein Sponsoring im Stream ist möglich. Schickt uns bitte eure Vorstellung zu Format und Zeitraum.\n\nViele Grüße\nPhilip',video:'v8'}
     ],
     spam:6
   };
 }
-const KEY='gpc-proto-v1';
-let S=seed(), V={tab:'heute',video:null,test:false,dayPick:null,filter:'alle',uploading:null,tests:[]};
+const KEY='gpc-proto-v2';
+let S=seed(), V={tab:'heute',space:'main',folder:null,video:null,test:false,dayPick:null,filter:'alle',uploading:null,tests:[]};
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch{}};
 const load=()=>{try{const raw=localStorage.getItem(KEY);if(raw){const d=JSON.parse(raw);if(d&&d.videos)S=d}}catch{}};
 
 const STATUS={leer:['Noch leer','leer',0],material:['Material da','mat',.34],schnitt:['Im Schnitt','schnitt',.67],online:['Online','online',1]};
 const STAGE={neu:['Neu','neu'],frei:['Freigabe','frei'],lauf:['Läuft','lauf'],geld:['Abrechnen','geld']};
-const TYPE={dreh:['Dreh',COL.pink],call:['Call',COL.butter],deadline:['Deadline','#FF9A3D'],posting:['Posting',COL.clover]};
+const TYPE={dreh:['Dreh',COL.pink],call:['Call',COL.butter],deadline:['Deadline','#FF9A3D'],posting:['Posting',COL.clover],stream:['Stream',COL.lilac]};
 const me=()=>S.role==='creator';
 const other=()=>me()?'Philip':'GPC';
 const video=id=>S.videos.find(v=>v.id===id);
@@ -402,34 +448,34 @@ const upcoming=()=>S.events.filter(e=>dayDiff(e.date)>=0).sort(byWhen);
 /* ---------- Ansichten ---------- */
 const VIEW={
  heute(){
-  const nx=upcoming()[0],mine=S.todos.filter(t=>t.who===S.role||(S.role==='creator'&&t.who==='creator')),theirs=S.todos.filter(t=>!mine.includes(t)),open=mine.filter(t=>!t.done).length;
-  const big=nx?(nx.time||`${parse(nx.date).getDate()}.${parse(nx.date).getMonth()+1}.`):'';
-  const row=(t,canCheck)=>{
-    const body=`<span class="grow"><b>${esc(t.text)}</b><small>${esc(t.when)}</small></span>`;
-    const jump=t.video?`data-do="open-video" data-id="${t.video}"`:t.deal?`data-do="deal" data-id="${t.deal}"`:'';
-    return `<div class="row${t.done?' done':''}">${canCheck?`<button class="cb" data-do="todo" data-id="${t.id}" aria-pressed="${!!t.done}" aria-label="${esc(t.text)} erledigt">${check()}</button>`:`<span class="dot">${I.wait}</span>`}${jump?`<button class="grow" ${jump}>${body}</button>`:body}</div>`};
+  if(V.folder)return viewFolder(V.folder);
+  const nx=upcoming()[0],mine=S.todos.filter(t=>t.who===S.role),theirs=S.todos.filter(t=>t.who!==S.role),open=mine.filter(t=>!t.done).length;
   return `<div class="head"><h1 class="title">Heute</h1><p class="sub">${fmt(base,{weekday:'long',day:'numeric',month:'long'})}</p></div>
+  <div class="shelf">${SPACE_KEYS.map(k=>`<button class="fo" data-do="folder" data-id="${k}" style="${spaceStyle(k)}">${SPACES[k].short}<small>${S.todos.filter(t=>t.space===k&&!t.done).length} offen</small></button>`).join('')}</div>
   ${nx?`<button class="hero" data-do="${nx.video?'open-video':'tab'}" data-id="${nx.video||''}" data-tab="kalender" aria-label="Als Nächstes: ${esc(TYPE[nx.type][0])}, ${esc(nx.title)}, ${esc(rel(nx.date))} ${esc(nx.time)}"><span class="sewn">Als Nächstes</span><canvas data-knit="hero" data-in aria-hidden="true"></canvas></button>
   <p class="cap">${esc(nx.title)}<small>${esc(rel(nx.date))}${nx.time?`, ${nx.time} Uhr`:''}</small></p>`:''}
-  <section><h2 class="h2">Bei dir <span class="count">${open}</span></h2>${mine.map(t=>row(t,true)).join('')||'<p class="sub">Alles erledigt.</p>'}</section>
-  <section><h2 class="h2">Bei ${other()}</h2>${theirs.map(t=>row(t,false)).join('')}</section>`;
+  <section><h2 class="h2">Bei dir <span class="count">${open}</span></h2>${mine.map(t=>taskRow(t,true,true)).join('')||'<p class="sub">Alles erledigt.</p>'}</section>
+  <section><h2 class="h2">Bei ${other()}</h2>${theirs.map(t=>taskRow(t,false,true)).join('')}</section>`;
  },
  videos(){
   if(V.test)return viewTest();
   if(V.video)return viewVideo(video(V.video));
-  const list=S.videos.map(v=>{const st=STATUS[v.status],d=v.deal&&deal(v.deal);
-   return `<button class="row" data-do="open-video" data-id="${v.id}"><span class="mini"><canvas data-knit="mini" data-p="${st[2]}" data-c="${d?COL.clover:COL.pink}" aria-hidden="true"></canvas></span><span class="grow"><b>${esc(v.title)}</b><small>${d?`Für ${esc(d.brand)}`:'Eigener Content'}, ${v.clips.length?`${v.clips.length} ${v.clips.length===1?'Clip':'Clips'}`:'noch kein Material'}</small></span><span class="pill ${st[1]}">${st[0]}</span></button>`}).join('');
+  const sp=SPACES[V.space],list=S.videos.filter(v=>v.space===V.space).map(v=>{const st=STATUS[v.status],d=v.deal&&deal(v.deal);
+   return `<button class="row" data-do="open-video" data-id="${v.id}"><span class="mini"><canvas data-knit="mini" data-p="${st[2]}" data-c="${sp.c}" aria-hidden="true"></canvas></span><span class="grow"><b>${esc(v.title)}</b><small>${d?`Für ${esc(d.brand)}`:'Eigener Content'}, ${v.clips.length?`${v.clips.length} ${v.clips.length===1?'Clip':'Clips'}`:'noch kein Material'}</small></span><span class="pill ${st[1]}">${st[0]}</span></button>`}).join('');
   return `<div class="head"><h1 class="title">Videos</h1></div>
-  <button class="btn" data-do="new-video">${I.plus}Neues Video</button>
+  ${spaceBar()}
+  <button class="btn" data-do="new-video">${I.plus}${sp.item==='Stream'?'Neuer Stream':'Neues Video'}</button>
   <button class="hint" data-do="open-test">${I.test}<span>Handy-Test<small>Bleibt dein Video beim Hochladen im Original?</small></span></button>
-  <section>${list}</section>`;
+  <section>${list||`<p class="sub">Noch nichts hier. Leg oben den ersten Eintrag an.</p>`}</section>`;
  },
  ideen(){
-  const open=S.ideas.filter(i=>!i.video).sort((a,b)=>b.at.localeCompare(a.at)),done=S.ideas.filter(i=>i.video);
+  const sp=SPACES[V.space],mine=S.ideas.filter(i=>i.space===V.space),open=mine.filter(i=>!i.video).sort((a,b)=>b.at.localeCompare(a.at)),done=mine.filter(i=>i.video);
   return `<div class="head"><h1 class="title">Ideen</h1></div>
-  <form class="pad" data-form="idea"><label class="sr" for="idea-text">Neue Idee</label><textarea id="idea-text" placeholder="Was willst du als Nächstes machen?" rows="3" maxlength="240"></textarea><p class="err" id="idea-err" hidden>Schreib erst deine Idee auf.</p><button class="btn" type="submit">Idee speichern</button></form>
+  ${spaceBar()}
+  <form class="pad" data-form="idea"><label class="sr" for="idea-text">Neue Idee für ${esc(sp.name)}</label><textarea id="idea-text" placeholder="Neue Idee für ${esc(sp.short)}" rows="3" maxlength="240"></textarea><p class="err" id="idea-err" hidden>Schreib erst deine Idee auf.</p><button class="btn" type="submit">Idee speichern</button></form>
   ${open.length?`<div class="wall" id="wall">${open.map(i=>sticker(i)).join('')}</div>`:'<p class="sub">Noch keine offene Idee. Schreib die erste oben auf.</p>'}
-  ${done.length?`<section><h2 class="h2" style="margin-bottom:10px">Schon gedreht</h2><div class="wall">${done.map(i=>sticker(i,true)).join('')}</div></section>`:''}`;
+  ${done.length?`<section><h2 class="h2" style="margin-bottom:10px">Schon gedreht</h2><div class="wall">${done.map(i=>sticker(i,true)).join('')}</div></section>`:''}
+  <button class="link" data-do="drive-sub" data-id="ideen">Ideen in Google Drive öffnen</button>`;
  },
  kalender(){
   const dow=(base.getDay()+6)%7,week=[...Array(7)].map((_,i)=>day(i-dow));
@@ -439,18 +485,37 @@ const VIEW={
   return `<div class="head"><h1 class="title">Kalender</h1><p class="sub">${fmt(base,{month:'long',year:'numeric'})}</p></div>
   <div class="week">${week.map(d=>`<button class="day${has(d)?' has':''}${d===day(0)?' today':''}" data-do="day" data-id="${d}" aria-pressed="${V.dayPick===d}" aria-label="${fmt(parse(d),{weekday:'long',day:'numeric',month:'long'})}${has(d)?', mit Termin':''}"><span>${fmt(parse(d),{weekday:'short'}).replace('.','')}</span><b>${parse(d).getDate()}</b><i></i></button>`).join('')}</div>
   <button class="btn" data-do="new-event">${I.plus}Termin eintragen</button>
-  <section>${groups.length?groups.map(g=>`<p class="grp">${esc(rel(g))}</p>${list.filter(e=>e.date===g).map(e=>`<button class="row" ${e.video?`data-do="open-video" data-id="${e.video}"`:'data-do="event" data-id="'+e.id+'"'}><span class="ty" style="--c:${TYPE[e.type][1]}"></span><span class="when">${e.time?`<b>${e.time}</b>`:'<small>Ganzer Tag</small>'}</span><span class="grow"><b>${esc(e.title)}</b><small>${TYPE[e.type][0]}</small></span></button>`).join('')}`).join(''):`<p class="sub">An diesem Tag ist nichts eingetragen.</p>`}</section>
+  <section>${groups.length?groups.map(g=>`<p class="grp">${esc(rel(g))}</p>${list.filter(e=>e.date===g).map(e=>`<button class="row" ${e.video?`data-do="open-video" data-id="${e.video}"`:'data-do="event" data-id="'+e.id+'"'}><span class="ty" style="--c:${TYPE[e.type][1]}"></span><span class="when">${e.time?`<b>${e.time}</b>`:'<small>Ganzer Tag</small>'}</span><span class="grow"><b>${esc(e.title)}</b><small>${TYPE[e.type][0]}${e.space?`, ${SPACES[e.space].short}`:''}</small></span></button>`).join('')}`).join(''):`<p class="sub">An diesem Tag ist nichts eingetragen.</p>`}</section>
   ${V.dayPick?'<button class="link" data-do="day-all">Alle Termine zeigen</button>':''}
   <p class="sub">Neue Termine landen später automatisch im Google Kalender.</p>`;
  },
  deals(){
-  const f=V.filter,list=S.deals.filter(d=>f==='alle'||d.stage===f);
+  const f=V.filter,list=S.deals.filter(d=>d.space===V.space&&(f==='alle'||d.stage===f));
   const chip=(k,l)=>`<button class="chip" data-do="filter" data-id="${k}" aria-pressed="${f===k}">${l}</button>`;
   return `<div class="head"><h1 class="title">Deals</h1><p class="sub">${S.spam} Spam-Mails aussortiert</p></div>
+  ${spaceBar()}
   <div class="chips">${chip('alle','Alle')}${chip('neu','Neu')}${chip('frei','Freigabe')}${chip('lauf','Läuft')}${chip('geld','Abrechnen')}</div>
   <div class="deals">${list.map(d=>`<button class="deal" data-do="deal" data-id="${d.id}"><span class="t"><span class="n">${esc(d.brand)}</span><span class="pill ${STAGE[d.stage][1]}">${STAGE[d.stage][0]}</span></span><small>${esc(d.line)}</small>${!me()&&d.money?`<small class="m">${esc(d.money)}</small>`:''}</button>`).join('')||'<p class="sub">Hier ist gerade nichts.</p>'}</div>`;
  }
 };
+function taskRow(t,canCheck,tag){
+  const body=`<span class="grow"><b>${esc(t.text)}</b><small>${esc(t.when)}${tag?`, ${SPACES[t.space].short}`:''}</small></span>`;
+  const jump=t.video?`data-do="open-video" data-id="${t.video}"`:t.deal?`data-do="deal" data-id="${t.deal}"`:'';
+  return `<div class="row${t.done?' done':''}">${canCheck?`<button class="cb" data-do="todo" data-id="${t.id}" aria-pressed="${!!t.done}" aria-label="${esc(t.text)} erledigt">${check()}</button>`:`<span class="dot">${I.wait}</span>`}${jump?`<button class="grow" ${jump}>${body}</button>`:body}</div>`;
+}
+function spaceBar(){
+  return `<div class="spaces" role="group" aria-label="Bereich wählen">${SPACE_KEYS.map(k=>`<button class="sp" data-do="space" data-id="${k}" aria-pressed="${V.space===k}" style="${spaceStyle(k)}">${SPACES[k].short}</button>`).join('')}</div>`;
+}
+function viewFolder(k){
+  const sp=SPACES[k],v=S.videos.filter(x=>x.space===k).length,i=S.ideas.filter(x=>x.space===k&&!x.video).length,d=S.deals.filter(x=>x.space===k).length;
+  const label={videos:`${v} ${sp.item}${v===1?'':'s'}`,ideen:`${i} ${i===1?'Idee':'Ideen'}`,deals:`${d} ${d===1?'Deal':'Deals'}`};
+  const tasks=S.todos.filter(t=>t.space===k&&!t.done);
+  return `<button class="back" data-do="back">${I.back}Heute</button>
+  <div class="head"><h1 class="title small">${esc(sp.name)}</h1><p class="sub">${sp.kind}</p></div>
+  <div class="subs">${sp.subs.map(([id,n])=>`<button class="fo" data-do="sub" data-id="${id}" style="--c:${COL.wool};--t:${COL.plum};--o:rgba(43,10,51,.3)">${esc(n)}<small>${label[id]||'In Google Drive'}</small></button>`).join('')}</div>
+  <button class="btn ghost" data-do="drive-space">${I.out}Ordner in Google Drive öffnen</button>
+  ${tasks.length?`<section><h2 class="h2">Offen <span class="count">${tasks.length}</span></h2>${tasks.map(t=>taskRow(t,t.who===S.role,false)).join('')}</section>`:''}`;
+}
 function sticker(i,gone){
   const P=[[COL.pink,COL.plum,'rgba(43,10,51,.4)'],[COL.plum,COL.wool,'rgba(255,243,248,.42)'],[COL.wool,COL.plum,'rgba(43,10,51,.32)'],[COL.cobalt,COL.wool,'rgba(255,243,248,.46)'],[COL.clover,COL.plum,'rgba(43,10,51,.4)']];
   const h=[...i.id].reduce((a,c)=>a*31+c.charCodeAt(0)>>>0,7),[c,t,o]=P[h%P.length],r=((h>>3)%5-2)*.8;
@@ -461,7 +526,7 @@ function viewVideo(v){
   if(!v){V.video=null;return VIEW.videos()}
   const d=v.deal&&deal(v.deal),up=V.uploading&&V.uploading.id===v.id;
   return `<button class="back" data-do="back">${I.back}Alle Videos</button>
-  <div class="head"><h1 class="title small">${esc(v.title)}</h1><p class="sub">${d?`Für ${esc(d.brand)}`:'Eigener Content'}</p></div>
+  <div class="head"><h1 class="title small">${esc(v.title)}</h1><p class="sub">${esc(SPACES[v.space].name)}, ${d?`für ${esc(d.brand)}`:'eigener Content'}</p></div>
   <div class="patch" id="patch"><canvas data-knit="title" ${v.clips.length?'data-in':'data-p="0"'} aria-hidden="true"></canvas></div>
   ${up?`<div class="prog"><span id="up-text">Lädt hoch</span><div class="bar"><i id="up-bar"></i></div><span class="note">App offen lassen, bis alles fertig ist.</span></div>`:`<button class="btn" data-do="pick">${I.up}Rohmaterial hochladen</button>`}
   <button class="btn ghost" data-do="drive">${I.out}Google Drive öffnen</button>
@@ -496,7 +561,7 @@ function mountKnits(fresh){
   $$('canvas[data-knit]',view).forEach(cv=>{
     const kind=cv.dataset.knit;let spec;
     if(kind==='hero'){const nx=upcoming()[0];spec={kind,top:TYPE[nx.type][0].toUpperCase(),big:nx.time||`${parse(nx.date).getDate()}.${parse(nx.date).getMonth()+1}.`,yarn:[COL.plum,COL.butter,COL.pink]}}
-    else if(kind==='title'){const v=video(V.video);spec={kind,title:v.title,yarn:[COL.pink,COL.plum,COL.butter],p:cv.dataset.p?+cv.dataset.p:1}}
+    else if(kind==='title'){const v=video(V.video);spec={kind,title:v.title,yarn:[SPACES[v.space].c,SPACES[v.space].t,COL.butter],p:cv.dataset.p?+cv.dataset.p:1}}
     else spec={kind:'mini',yarn:[cv.dataset.c],p:+cv.dataset.p};
     const k=new Knit(cv,spec);k.kind=kind;knits.push(k);
     if(fresh&&cv.hasAttribute('data-in'))k.knit(kind==='hero'?760:560);
@@ -504,8 +569,9 @@ function mountKnits(fresh){
 }
 function paint(fresh){
   const y=view.scrollTop;
-  app.dataset.world=V.tab;
-  $('#theme').content=WORLD[V.tab];
+  const world=V.tab==='heute'&&V.folder?`f-${V.folder}`:V.tab;
+  app.dataset.world=world;
+  $('#theme').content=WORLD[world];
   view.innerHTML=VIEW[V.tab]();
   view.scrollTop=fresh?0:y;
   $$('.tab',hem).forEach(t=>t.dataset.tab===V.tab?t.setAttribute('aria-current','page'):t.removeAttribute('aria-current'));
@@ -513,13 +579,15 @@ function paint(fresh){
   V.freshIdea=null;
   if(V.uploading&&V.uploading.id===V.video)updateUpload();
 }
-function go(tab,from){
-  const change=()=>{V.tab=tab;V.video=null;V.test=false;V.dayPick=null;paint(true);if(location.protocol!=='data:')try{location.hash=tab}catch{}};
-  if(tab===V.tab&&!V.video&&!V.test)return;
+function wipe(change,from){
   if(calm||!document.startViewTransition||!from||document.hidden){change();return}
   const r=from.getBoundingClientRect(),x=r.left+r.width/2,y=r.top+r.height/2,R=Math.hypot(Math.max(x,innerWidth-x),Math.max(y,innerHeight-y));
   const vt=document.startViewTransition(change);
   vt.ready.then(()=>document.documentElement.animate({clipPath:[`circle(0px at ${x}px ${y}px)`,`circle(${R}px at ${x}px ${y}px)`]},{duration:520,easing:'cubic-bezier(.22,.9,.3,1)',pseudoElement:'::view-transition-new(root)'})).catch(()=>{});
+}
+function go(tab,from){
+  if(tab===V.tab&&!V.video&&!V.test&&!V.folder)return;
+  wipe(()=>{V.tab=tab;V.folder=null;V.video=null;V.test=false;V.dayPick=null;paint(true);if(location.protocol!=='data:')try{location.hash=tab}catch{}},from);
 }
 let toastT;function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>e.classList.remove('on'),2600)}
 function burst(from){
@@ -544,9 +612,10 @@ function protoSheet(){
   <button class="btn" data-do="open-test">Handy-Test starten</button><button class="btn ghost" data-do="reset">Beispieldaten zurücksetzen</button>`);
 }
 function newVideoSheet(preset,ideaId){
-  sheet('Neues Video',`<h2>Neues Video</h2><form data-form="video" data-idea="${ideaId||''}" style="display:contents"><div class="field"><label for="v-title">Titel</label><input id="v-title" maxlength="60" autocomplete="off" placeholder="Wie heißt das Video?" value="${esc(preset||'')}"><p class="err" id="v-err" hidden>Gib dem Video einen Titel.</p></div>
-  <div class="field"><label for="v-deal">Für eine Kooperation?</label><select id="v-deal"><option value="">Nein, eigener Content</option>${S.deals.map(d=>`<option value="${d.id}">${esc(d.brand)}</option>`).join('')}</select></div>
-  <button class="btn" type="submit">Video anlegen</button></form><p class="note">Der Drive-Ordner wird dann automatisch angelegt.</p>`,preset?null:'#v-title');
+  const sp=SPACES[V.space],word=sp.item==='Stream'?'Neuer Stream':'Neues Video',deals=S.deals.filter(d=>d.space===V.space);
+  sheet(word,`<h2>${word}</h2><p class="sub">Für ${esc(sp.name)}</p><form data-form="video" data-idea="${ideaId||''}" style="display:contents"><div class="field"><label for="v-title">Titel</label><input id="v-title" maxlength="60" autocomplete="off" placeholder="Wie heißt ${sp.item==='Stream'?'der Stream':'das Video'}?" value="${esc(preset||'')}"><p class="err" id="v-err" hidden>Gib ${sp.item==='Stream'?'dem Stream':'dem Video'} einen Titel.</p></div>
+  <div class="field"><label for="v-deal">Für eine Kooperation?</label><select id="v-deal"><option value="">Nein, eigener Content</option>${deals.map(d=>`<option value="${d.id}">${esc(d.brand)}</option>`).join('')}</select></div>
+  <button class="btn" type="submit">Anlegen</button></form><p class="note">Der Drive-Ordner entsteht dann automatisch unter ${esc(sp.name)}.</p>`,preset?null:'#v-title');
 }
 function eventSheet(){
   sheet('Neuer Termin',`<h2>Neuer Termin</h2><form data-form="event" style="display:contents"><div class="field"><label for="e-title">Was steht an?</label><input id="e-title" maxlength="60" autocomplete="off" placeholder="Dreh, Call, Deadline"><p class="err" id="e-err" hidden>Schreib kurz auf, was ansteht.</p></div>
@@ -557,16 +626,15 @@ function eventSheet(){
 function dealSheet(d){
   const v=d.video&&video(d.video);
   const act=d.stage==='frei'?(me()?`<p class="fold">${I.wait}Wartet auf Freigabe von Philip</p>`:`<button class="btn" data-do="approve" data-id="${d.id}">Freigeben und senden</button><button class="btn ghost" data-do="close">Noch nicht</button>`):'';
-  sheet(d.brand,`<h2>${esc(d.brand)}</h2><span class="pill ${STAGE[d.stage][1]}" style="align-self:flex-start">${STAGE[d.stage][0]}</span>
+  sheet(d.brand,`<h2>${esc(d.brand)}</h2><p class="sub">${esc(SPACES[d.space].name)}</p><span class="pill ${STAGE[d.stage][1]}" style="align-self:flex-start">${STAGE[d.stage][0]}</span>
   <div class="field"><span class="lab">Aus der Mail</span><p>${esc(d.summary)}</p></div><div class="field"><span class="lab">Nächster Schritt</span><p>${esc(d.next)}</p></div>
   ${!me()&&d.money?`<div class="field"><span class="lab">Betrag</span><p>${esc(d.money)}</p></div>`:''}
   ${d.draft?`<div class="field"><span class="lab">Antwortentwurf</span><p class="quote">${esc(d.draft)}</p></div>`:''}${act}
   ${v?`<button class="btn ghost" data-do="open-video" data-id="${v.id}">Zum Video</button>`:''}
   <p class="note">In der echten App öffnet ein Button die Mail in Gmail.</p>`);
 }
-function driveSheet(v){
-  const m=fmt(new Date(),{year:'numeric'});
-  sheet('Google Drive',`<h2>Google Drive</h2><p>Hier springt die echte App direkt in genau diesen Ordner:</p><p class="fold">${I.folder}<span>Videos / ${m} / ${esc(v.title)}</span></p><p class="note">Im Prototyp ist noch nichts verbunden, deshalb bleibt dieser Button hier stehen.</p><button class="btn" data-do="close">Verstanden</button>`);
+function driveSheet(path,extra=''){
+  sheet('Google Drive',`<h2>Google Drive</h2><p>Hier springt die echte App direkt in genau diesen Ordner:</p><p class="fold">${I.folder}<span>${esc(path)}</span></p>${extra}<p class="note">Im Prototyp ist noch nichts verbunden, deshalb bleibt dieser Button hier stehen.</p><button class="btn" data-do="close">Verstanden</button>`);
 }
 function ideaSheet(i){
   const v=i.video&&video(i.video);
@@ -603,14 +671,19 @@ const DO={
  proto(){protoSheet()},
  close(){closeSheet()},
  role(el){S.role=el.dataset.id;save();closeSheet();paint(false);toast(me()?'Du siehst die App als German Pink Cardigan.':'Du siehst die App als Philip.')},
- reset(){S=seed();save();closeSheet();V.video=null;V.test=false;V.tests=[];paint(true);toast('Beispieldaten sind zurückgesetzt.')},
- todo(el){const t=S.todos.find(x=>x.id===el.dataset.id);t.done=!t.done;save();el.setAttribute('aria-pressed',t.done);el.closest('.row').classList.toggle('done',t.done);const c=$('.count',view);if(c)c.textContent=S.todos.filter(x=>x.who===S.role&&!x.done).length;if(t.done&&!calm)burst(el)},
- 'open-video'(el){const id=el.dataset.id;closeSheet();V.tab='videos';V.video=id;V.test=false;paint(true)},
- back(){V.video=null;V.test=false;paint(true)},
+ reset(){S=seed();save();closeSheet();V.space='main';V.folder=null;V.video=null;V.test=false;V.tests=[];paint(true);toast('Beispieldaten sind zurückgesetzt.')},
+ todo(el){const t=S.todos.find(x=>x.id===el.dataset.id);t.done=!t.done;save();el.setAttribute('aria-pressed',t.done);el.closest('.row').classList.toggle('done',t.done);const c=$('.count',view);if(c&&!V.folder)c.textContent=S.todos.filter(x=>x.who===S.role&&!x.done).length;const sm=$(`.fo[data-id="${t.space}"] small`,view);if(sm)sm.textContent=`${S.todos.filter(x=>x.space===t.space&&!x.done).length} offen`;if(t.done&&!calm)burst(el)},
+ 'open-video'(el){const id=el.dataset.id;closeSheet();V.tab='videos';V.space=video(id).space;V.folder=null;V.video=id;V.test=false;paint(true)},
+ back(){V.video=null;V.test=false;V.folder=null;paint(true)},
+ folder(el){const k=el.dataset.id;wipe(()=>{V.folder=k;V.space=k;paint(true)},el)},
+ space(el){V.space=el.dataset.id;V.filter='alle';paint(false)},
+ sub(el){const id=el.dataset.id,k=V.folder;if(TAB_KEYS.includes(id)){wipe(()=>{V.tab=id;V.space=k;V.folder=null;V.video=null;V.test=false;paint(true)},el);return}driveSheet(drivePath(k,subName(k,id)),`<p class="note">Beispieldateien: ${SAMPLE_FILES[id]}</p>`)},
+ 'drive-space'(){driveSheet(drivePath(V.folder))},
+ 'drive-sub'(el){driveSheet(drivePath(V.space,subName(V.space,el.dataset.id)))},
  'new-video'(){newVideoSheet()},
  pick(){$('#picker').click()},
  sim(){const v=video(V.video);const n=v.clips.length;startUpload(v.id,[{name:`IMG_${3100+n}.MOV`,mb:980},{name:`IMG_${3101+n}.MOV`,mb:1340},{name:`IMG_${3102+n}.MOV`,mb:515}])},
- drive(){driveSheet(video(V.video))},
+ drive(){const v=video(V.video);driveSheet(drivePath(v.space,subName(v.space,'videos'),v.title),'<p class="note">Darin liegen die Ordner Rohmaterial, Schnitt und Fertig.</p>')},
  status(el){const v=video(V.video);v.status=el.dataset.id;save();paint(false)},
  idea(el){ideaSheet(S.ideas.find(i=>i.id===el.dataset.id))},
  'idea-video'(el){const i=S.ideas.find(x=>x.id===el.dataset.id);newVideoSheet(i.text.slice(0,60),i.id)},
@@ -634,10 +707,10 @@ const FORM={
   if(calm){gate.remove();return}
   gate.animate([{transform:'translateY(0)'},{transform:'translateY(-102%)'}],{duration:520,easing:'cubic-bezier(.6,0,.2,1)',fill:'forwards'}).onfinish=()=>gate.remove();
   setTimeout(()=>gate.remove(),900)},
- idea(f){const ta=$('#idea-text',f),err=$('#idea-err',f),t=ta.value.trim();if(!t){err.hidden=false;ta.focus();return}const id='i'+Date.now();S.ideas.unshift({id,text:t,at:day(0)});save();V.freshIdea=id;paint(false);toast('Idee gespeichert.');const b=$('#wall');b&&!calm&&b.animate([{transform:'translateY(0)'},{transform:'translateY(5px)'},{transform:'translateY(0)'}],{duration:220,delay:150})},
+ idea(f){const ta=$('#idea-text',f),err=$('#idea-err',f),t=ta.value.trim();if(!t){err.hidden=false;ta.focus();return}const id='i'+Date.now();S.ideas.unshift({id,space:V.space,text:t,at:day(0)});save();V.freshIdea=id;paint(false);toast(`Idee für ${SPACES[V.space].short} gespeichert.`);const b=$('#wall');b&&!calm&&b.animate([{transform:'translateY(0)'},{transform:'translateY(5px)'},{transform:'translateY(0)'}],{duration:220,delay:150})},
  'idea-edit'(f){const i=S.ideas.find(x=>x.id===f.dataset.id),t=$('#i-text',f).value.trim();if(t){i.text=t;save()}closeSheet();paint(false)},
- video(f){const tt=$('#v-title',f),t=tt.value.trim();if(!t){$('#v-err',f).hidden=false;tt.focus();return}const id='v'+Date.now(),dealId=$('#v-deal',f).value||null;S.videos.unshift({id,title:t,deal:dealId,status:'leer',clips:[]});
-  if(f.dataset.idea){const i=S.ideas.find(x=>x.id===f.dataset.idea);if(i)i.video=id}save();closeSheet();V.tab='videos';V.video=id;V.test=false;paint(true);toast('Video angelegt. Der Drive-Ordner wird hier nur simuliert.')},
+ video(f){const tt=$('#v-title',f),t=tt.value.trim();if(!t){$('#v-err',f).hidden=false;tt.focus();return}const id='v'+Date.now(),dealId=$('#v-deal',f).value||null;S.videos.unshift({id,space:V.space,title:t,deal:dealId,status:'leer',clips:[]});
+  if(f.dataset.idea){const i=S.ideas.find(x=>x.id===f.dataset.idea);if(i)i.video=id}save();closeSheet();V.tab='videos';V.video=id;V.test=false;paint(true);toast('Angelegt. Der Drive-Ordner wird hier nur simuliert.')},
  event(f){const tt=$('#e-title',f),t=tt.value.trim();if(!t){$('#e-err',f).hidden=false;tt.focus();return}S.events.push({id:'e'+Date.now(),type:$('#e-type',f).value,title:t,date:$('#e-date',f).value||day(1),time:$('#e-time',f).value||''});save();closeSheet();paint(false);toast('Termin eingetragen. Google Kalender ist hier noch nicht verbunden.')},
  compare(f){const i=+f.dataset.id,t=V.tests[i],inp=$('input',f),mb=parseSize(inp.value);if(!mb){$(`#cmp-err-${i}`,f).hidden=false;inp.focus();return}t.photos=inp.value.trim();const diff=(mb-t.mb)/mb,pct=Math.round(Math.abs(diff)*100);t.verdict=Math.abs(diff)<=.05?{ok:true,text:'Original: Die Größe stimmt mit der Fotos-App überein.'}:diff>0?{ok:false,text:`Verkleinert: Hier kommt das Video ${pct} % kleiner an als in der Fotos-App.`}:{ok:false,text:`Abweichung: Hier ist das Video ${pct} % größer als eingetragen. Prüf die Zahl noch einmal.`};paint(false)}
 };
@@ -647,7 +720,7 @@ document.addEventListener('input',e=>{if(e.target.id==='idea-text'){const p=$('#
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&layer.classList.contains('open'))closeSheet()});
 $('#picker').addEventListener('change',e=>{const fs=[...e.target.files];e.target.value='';if(!fs.length||!V.video)return;startUpload(V.video,fs.map(f=>({name:f.name,mb:f.size/1e6})))});
 $('#test-picker').addEventListener('change',async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;toast('Video wird gelesen.');const m=await videoMeta(f);V.tests.push({name:f.name,mb:f.size/1e6,type:f.type,w:m.w||0,h:m.h||0,sec:m.sec||0});paint(false)});
-addEventListener('hashchange',()=>{const t=location.hash.slice(1);if(WORLD[t]&&t!==V.tab){V.tab=t;V.video=null;V.test=false;paint(true)}});
+addEventListener('hashchange',()=>{const t=location.hash.slice(1);if(TAB_KEYS.includes(t)&&t!==V.tab){V.tab=t;V.folder=null;V.video=null;V.test=false;paint(true)}});
 if(window.claude?.hot?.snapshot)window.claude.hot.snapshot(()=>S);
 
 /* Sichtschutz fürs Teilen des Prototyps, kein echter Zugriffsschutz: Alle Inhalte stehen im Quelltext. */
@@ -662,7 +735,7 @@ function boot(d){
 }
 function start(d){
   load();if(d&&d.videos)S=d;
-  const t=location.hash.slice(1);if(WORLD[t])V.tab=t;
+  const t=location.hash.slice(1);if(TAB_KEYS.includes(t))V.tab=t;
   paint(true);
 }
 if(window.claude?.hot?.ready)window.claude.hot.ready(boot);else boot(window.claude?.hot?.data??{});
