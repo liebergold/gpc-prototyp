@@ -41,7 +41,7 @@ svg{display:block}
 .mark{font-weight:700;font-size:14px;letter-spacing:-.005em;white-space:nowrap;color:var(--soft)}
 .tag{flex:none;font-size:12.5px;font-weight:600;line-height:1;padding:7px 10px;border-radius:999px;box-shadow:inset 0 0 0 1px var(--line);color:var(--soft)}
 
-.view{position:relative;flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;padding:4px 16px 28px;display:flex;flex-direction:column;gap:18px;-webkit-overflow-scrolling:touch}
+.view{position:relative;flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;padding:4px 16px 104px;display:flex;flex-direction:column;gap:18px;-webkit-overflow-scrolling:touch}
 .title{font:800 44px/1.02 var(--display);font-stretch:78%;letter-spacing:-.022em;text-wrap:balance}
 .title.small{font-size:34px;line-height:1.06;overflow-wrap:anywhere}
 .head{display:flex;flex-direction:column;gap:3px}
@@ -241,7 +241,7 @@ section>.h2{margin-bottom:4px}
 .roller{position:absolute;left:0;top:0;z-index:4;width:42px;height:42px;margin:-21px 0 0 -21px;pointer-events:none;will-change:transform}
 .roller svg{width:42px;height:42px}
 
-.hem{--fg:var(--wool);--soft:rgba(255,243,248,.68);--line:rgba(255,243,248,.13);position:relative;z-index:10;flex:none;display:grid;grid-template-columns:1fr 1fr 74px 1fr 1fr 1fr;padding:6px 4px calc(env(safe-area-inset-bottom) + 6px);background:var(--ink);box-shadow:0 -1px 0 var(--line)}
+.hem{--fg:var(--wool);--soft:rgba(255,243,248,.68);--line:rgba(255,243,248,.13);position:relative;z-index:10;flex:none;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));padding:6px 4px calc(env(safe-area-inset-bottom) + 6px);background:var(--ink);box-shadow:0 -1px 0 var(--line)}
 .ind{position:absolute;left:0;top:8px;width:40px;height:28px;border-radius:9px;background:color-mix(in srgb,var(--pink) 26%,transparent);opacity:0;transition:transform .3s var(--ease),opacity .15s ease}
 .tab{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:50px;justify-content:center;font-size:11px;font-weight:600;line-height:1.2;text-align:center;color:var(--soft);transition:color .16s ease}
 .tab .ico{width:40px;height:28px;display:grid;place-items:center;transition:transform .14s var(--ease)}
@@ -249,14 +249,15 @@ section>.h2{margin-bottom:4px}
 .tab:active .ico{transform:scale(.84)}
 .tab[aria-current=page]{color:var(--fg)}
 .tab[aria-current=page] .ico{color:#FF8FC3}
-.tab.big{justify-content:flex-end;gap:1px;color:var(--butter);font-weight:700}
-.knob{position:relative;display:block;width:62px;height:62px;margin-top:-30px;transition:transform .46s var(--spring)}
+.fab{position:absolute;z-index:15;right:13px;bottom:calc(env(safe-area-inset-bottom) + 74px);width:66px;height:72px;display:flex;flex-direction:column;align-items:center;transition:transform .28s var(--ease)}
+.knob{position:relative;display:block;width:62px;height:62px;border-radius:50%;box-shadow:0 10px 22px rgba(10,4,14,.5);transition:transform .46s var(--spring)}
 .knob svg{position:relative;z-index:1;width:62px;height:62px}
 .knob::after{content:'';position:absolute;inset:2px;border-radius:50%;border:2px solid var(--butter);opacity:0;animation:ping 5s var(--ease) infinite}
 @keyframes ping{0%,72%{transform:scale(1);opacity:0}76%{opacity:.7}100%{transform:scale(1.5);opacity:0}}
-.tab.big:active .knob{transform:scale(.88);transition-duration:.12s}
-.tab.big[aria-current=page] .knob{transform:rotate(135deg) scale(1.07)}
-.tab.big[aria-current=page] .knob::after{animation:none}
+.fab-l{position:relative;z-index:2;margin-top:-11px;padding:3px 8px;border-radius:999px;background:var(--plum);color:var(--butter);box-shadow:0 0 0 1.5px var(--butter);font-size:11.5px;font-weight:700;line-height:1.2}
+.fab:active .knob{transform:scale(.88);transition-duration:.12s}
+.fab[aria-pressed=true] .knob{transform:rotate(135deg) scale(1.05)}
+.fab[aria-pressed=true] .knob::after{animation:none}
 
 .a-rays,.a-core,.a-box,.a-tri,.a-bag,.a-handle,.a-line,.a-pins,.a-dot1,.a-dot2{transform-box:fill-box;transform-origin:center}
 .tab[aria-current=page] .a-rays{animation:rays .7s var(--ease) backwards}
@@ -327,7 +328,7 @@ section>.h2{margin-bottom:4px}
 .gate input{width:100%;min-height:52px;border:1px solid var(--line);border-radius:12px;background:var(--panel);color:var(--fg);font-size:17px;padding:12px 14px}
 .gate .note{text-align:center}
 
-.toast{position:absolute;z-index:30;left:14px;right:14px;bottom:calc(env(safe-area-inset-bottom) + 78px);padding:11px 14px;border-radius:12px;background:var(--wool);color:var(--plum);font-weight:600;font-size:14.5px;line-height:1.3;opacity:0;transform:translateY(12px);transition:opacity .18s,transform .26s var(--spring);pointer-events:none}
+.toast{position:absolute;z-index:30;left:14px;right:90px;bottom:calc(env(safe-area-inset-bottom) + 76px);padding:11px 14px;border-radius:12px;background:var(--wool);color:var(--plum);font-weight:600;font-size:14.5px;line-height:1.3;opacity:0;transform:translateY(12px);transition:opacity .18s,transform .26s var(--spring);pointer-events:none}
 .toast.on{opacity:1;transform:none}
 .pop{position:absolute;z-index:31;width:9px;height:9px;border-radius:50%;pointer-events:none;background:var(--c)}
 
@@ -349,6 +350,7 @@ section>.h2{margin-bottom:4px}
   </header>
   <main class="view" id="view" tabindex="-1"></main>
   <nav class="hem" aria-label="Bereiche" id="hem"></nav>
+  <button class="fab" id="fab" data-do="fab" aria-label="Ideen" aria-pressed="false"><span class="knob"></span><span class="fab-l">Ideen</span></button>
   <div class="layer" id="layer"></div>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <div class="gate" id="gate">
@@ -871,8 +873,9 @@ function planSheet(id,month){
 
 /* ---------- Rendern ---------- */
 const view=$('#view'),app=$('#app'),hem=$('#hem'),layer=$('#layer');
-const TABS=[['heute','Heute',I.sun],['videos','Videos',I.film],['ideen','Ideen',null],['deals','Deals',I.bag],['kalender','Kalender',I.cal],['roadmap','Roadmap',I.route]];
-hem.innerHTML='<span class="ind" id="ind"></span>'+TABS.map(([k,l,ic])=>`<button class="tab${ic?'':' big'}" data-do="tab" data-tab="${k}">${ic?`<span class="ico">${ic}</span>`:`<span class="knob">${knob(COL.butter,COL.pink)}</span>`}<span>${l}</span></button>`).join('');
+const TABS=[['heute','Heute',I.sun],['videos','Videos',I.film],['deals','Deals',I.bag],['kalender','Kalender',I.cal],['roadmap','Roadmap',I.route]];
+hem.innerHTML='<span class="ind" id="ind"></span>'+TABS.map(([k,l,ic])=>`<button class="tab" data-do="tab" data-tab="${k}"><span class="ico">${ic}</span><span>${l}</span></button>`).join('');
+$('.knob',$('#fab')).innerHTML=knob(COL.butter,COL.pink);
 function moveInd(){const ind=$('#ind'),t=$('.tab[aria-current=page]',hem),ico=t&&$('.ico',t);if(!ind)return;if(!ico){ind.style.opacity=0;return}const h=hem.getBoundingClientRect(),r=ico.getBoundingClientRect();ind.style.opacity=1;ind.style.transform=`translateX(${(r.left-h.left).toFixed(1)}px)`}
 addEventListener('resize',moveInd);
 let road=null;
@@ -900,6 +903,7 @@ function paint(fresh){
   $$('.tab',hem).forEach(t=>t.dataset.tab===V.tab?t.setAttribute('aria-current','page'):t.removeAttribute('aria-current'));
   mountKnits(fresh);
   moveInd();
+  $('#fab').setAttribute('aria-pressed',V.tab==='ideen');
   const sb=$('#spaces');if(sb){sb.getBoundingClientRect();sb.style.setProperty('--n',SPACE_KEYS.indexOf(V.space));V.spaceWas=V.space}
   if(fresh&&!calm){
     $$('.row,.deal,.fo,.hint,.rstat',view).slice(0,10).forEach((e,i)=>{e.style.setProperty('--i',i);e.classList.add('rise')});
@@ -1020,6 +1024,7 @@ const folderNameError=(parent,name,skip)=>!name?'Gib dem Ordner einen Namen.':ki
 /* ---------- Aktionen ---------- */
 const DO={
  tab(el){go(el.dataset.tab,el)},
+ fab(el){if(V.tab==='ideen'&&!V.custom){go(V.lastTab||'heute',el);return}if(V.tab!=='ideen')V.lastTab=V.tab;go('ideen',el)},
  proto(){protoSheet()},
  close(){closeSheet()},
  role(el){S.role=el.dataset.id;save();closeSheet();paint(false);toast(me()?'Du siehst die App als German Pink Cardigan.':'Du siehst die App als Philip.')},
