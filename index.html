@@ -193,8 +193,8 @@ section>.h2{margin-bottom:4px}
 .addf{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;min-height:42px;padding:8px 12px;border-radius:12px;font-weight:600;font-size:14px;line-height:1.15;text-align:center;color:var(--soft);box-shadow:inset 0 0 0 1px var(--line)}
 .addf svg{width:16px;height:16px;flex:none}
 .shelf .addf{grid-column:1/-1;margin-top:-7px}
-.spaces{position:relative;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;padding:4px;border-radius:13px;background:var(--panel)}
-.sp-ind{position:absolute;left:4px;top:4px;bottom:4px;width:calc((100% - 16px)/3);border-radius:9px;background:var(--raise);transform:translateX(calc(var(--n)*(100% + 4px)));transition:transform .28s var(--ease)}
+.spaces{position:relative;display:grid;grid-template-columns:repeat(var(--cols),minmax(0,1fr));gap:4px;padding:4px;border-radius:13px;background:var(--panel)}
+.sp-ind{position:absolute;left:4px;top:4px;bottom:4px;width:calc((100% - 8px - (var(--cols) - 1)*4px)/var(--cols));border-radius:9px;background:var(--raise);transform:translateX(calc(var(--n)*(100% + 4px)));transition:transform .28s var(--ease)}
 .sp{position:relative;z-index:1;display:flex;align-items:center;justify-content:center;gap:5px;min-height:40px;padding:6px 3px;border-radius:9px;font-weight:600;font-size:13px;line-height:1.1;text-align:center;color:var(--soft);transition:background-color .16s,color .16s}
 .sp::before{content:'';flex:none;width:7px;height:7px;border-radius:50%;background:var(--c)}
 .sp[aria-pressed=true]{color:var(--fg)}
@@ -299,25 +299,39 @@ section>.h2{margin-bottom:4px}
 .rise{animation:rise .38s var(--ease) backwards;animation-delay:calc(var(--i)*32ms)}
 @keyframes rise{from{opacity:0;transform:translateY(9px)}}
 
-.app[data-world=ideen]{--bg:var(--butter);--fg:var(--plum);--soft:rgba(43,10,51,.8);--line:rgba(43,10,51,.32);--act:var(--plum);--act-fg:var(--butter);--acc:var(--plum)}
-.app[data-world=ideen][data-space=main]{--bg:var(--pink);--act-fg:#FFB6D9}
-.app[data-world=ideen][data-space=twitch]{--bg:var(--violet);--fg:var(--wool);--soft:rgba(255,243,248,.9);--line:rgba(255,243,248,.44);--act-fg:var(--wool)}
-.app[data-world=ideen]::before{display:none}
+.app[data-tint]{--fg:var(--plum);--soft:rgba(43,10,51,.8);--line:rgba(43,10,51,.32);--act:var(--plum);--acc:var(--plum)}
+.app[data-tint=main]{--bg:var(--pink);--act-fg:#FFB6D9}
+.app[data-tint=ayri]{--bg:var(--butter);--act-fg:var(--butter)}
+.app[data-tint=twitch]{--bg:var(--violet);--fg:var(--wool);--soft:rgba(255,243,248,.9);--line:rgba(255,243,248,.44);--act-fg:var(--wool)}
+.app[data-tint]::before{display:none}
+.app[data-tint] .spaces{background:rgba(43,10,51,.12)}
+.app[data-tint] .sp-ind{background:var(--plum)}
+.app[data-tint] .sp{color:var(--fg)}
+.app[data-tint] .sp[aria-pressed=true]{color:var(--act-fg)}
+.app[data-tint] :is(.deal,.hint,.rstat,.fo,.mon,.card,.ms span){--fg:var(--plum);--soft:rgba(43,10,51,.76);--line:rgba(43,10,51,.18);background:var(--wool);color:var(--plum)}
+.app[data-tint] .fo:active{background:var(--wool)}
+.app[data-tint] .chip[aria-pressed=true]{background:var(--plum);color:var(--wool)}
+.app[data-tint] .pill{--p:var(--plum);--pt:var(--wool)}
+.app[data-tint] .pill.leer{--p:transparent;--pt:var(--fg);box-shadow:inset 0 0 0 1.5px var(--line)}
+.app[data-tint] .deal .pill.leer{--pt:var(--plum)}
+.app[data-tint] .view .field select,.app[data-tint] .view .field input{background:var(--wool);color:var(--plum);border-color:rgba(43,10,51,.3)}
+.app[data-tint] .ring .t{stroke:rgba(43,10,51,.14)}
+.app[data-tint] .rhud{background:var(--plum);color:var(--wool)}
+.app[data-tint] .rtrack{stroke:var(--line)}
+.app[data-tint] .rdone{stroke:var(--fg)}
+.app[data-tint] .mon.on{background:var(--plum);color:var(--wool)}
+.app[data-tint] .ms i{background:var(--wool);box-shadow:inset 0 0 0 3px var(--plum)}
+.app[data-tint] .ms.done i{background:var(--plum)}
+.app[data-tint] .ms.lauf i::after{background:var(--plum)}
 .app[data-world=ideen] .title{font:400 clamp(58px,17vw,72px)/.95 'Gasoek One','Arial Black',sans-serif;letter-spacing:0}
 .app[data-world=ideen] .head{position:relative}
 .icount{position:absolute;right:0;top:12px;padding:7px 11px;border-radius:999px 999px 999px 4px;background:var(--plum);color:var(--wool);font-weight:700;font-size:13.5px;line-height:1;transform:rotate(4deg)}
-.app[data-world=ideen] .spaces{background:rgba(43,10,51,.1)}
-.app[data-world=ideen] .sp-ind{background:var(--plum)}
-.app[data-world=ideen] .sp{color:var(--fg)}
-.app[data-world=ideen] .sp[aria-pressed=true]{color:var(--act-fg)}
 .app[data-world=ideen] .pad{--fg:var(--plum);background:var(--wool);color:var(--plum);border-radius:20px;transform:rotate(-.6deg);outline:2px dashed rgba(43,10,51,.3);outline-offset:-6px;padding:14px}
 .app[data-world=ideen] .pad .btn{background:var(--plum);color:var(--wool)}
 .app[data-world=ideen] .pad textarea{color:var(--plum);font-size:18px;font-weight:600}
 .app[data-world=ideen] .pad textarea::placeholder{color:rgba(43,10,51,.66)}
 .app[data-world=ideen] .pad:focus-within{box-shadow:0 0 0 3px var(--plum)}
 .app[data-world=ideen] .err{color:#A30F4F}
-.app[data-world=ideen] .fo{background:var(--wool);color:var(--plum)}
-.app[data-world=ideen] .fo small{color:rgba(43,10,51,.76)}
 .dice svg{width:22px;height:22px}
 .dice:active svg{transform:rotate(180deg) scale(1.1)}
 .dice.rolling svg{animation:roll .5s linear infinite}
@@ -562,7 +576,7 @@ function seed(){
   };
 }
 const KEY='gpc-proto-v3';
-let S=seed(), V={tab:'heute',space:'main',folder:null,custom:null,video:null,test:false,dayPick:null,filter:'alle',planFilter:'alle',uploading:null,tests:[]};
+let S=seed(), V={tab:'heute',space:'main',listAll:true,folder:null,custom:null,video:null,test:false,dayPick:null,filter:'alle',planFilter:'alle',uploading:null,tests:[]};
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch{}};
 const load=()=>{try{const raw=localStorage.getItem(KEY);if(raw){const d=JSON.parse(raw);if(d&&d.videos){S=d;if(!S.plan)S.plan=seed().plan}}}catch{}};
 
@@ -592,11 +606,11 @@ const VIEW={
  videos(){
   if(V.test)return viewTest();
   if(V.video)return viewVideo(video(V.video));
-  const sp=SPACES[V.space],list=S.videos.filter(v=>v.space===V.space&&!v.folder).map(videoRow).join('');
+  const sp=SPACES[V.space],list=S.videos.filter(v=>V.listAll||(v.space===V.space&&!v.folder)).map(videoRow).join('');
   return `<div class="head"><h1 class="title">Videos</h1></div>
   ${spaceBar()}
-  <button class="btn" data-do="new-video">${I.plus}${sp.item==='Stream'?'Neuer Stream':'Neues Video'}</button>
-  ${strip(`sub:${V.space}:videos`)}
+  <button class="btn" data-do="new-video">${I.plus}${!V.listAll&&sp.item==='Stream'?'Neuer Stream':'Neues Video'}</button>
+  ${V.listAll?'':strip(`sub:${V.space}:videos`)}
   <button class="hint" data-do="open-test">${I.test}<span>Handy-Test<small>Bleibt dein Video beim Hochladen im Original?</small></span></button>
   <section>${list||`<p class="sub">Noch nichts hier. Leg oben den ersten Eintrag an.</p>`}</section>`;
  },
@@ -625,13 +639,13 @@ const VIEW={
  },
  roadmap(){return viewRoadmap()},
  deals(){
-  const f=V.filter,list=S.deals.filter(d=>d.space===V.space&&(f==='alle'||d.stage===f));
+  const f=V.filter,list=S.deals.filter(d=>(V.listAll||d.space===V.space)&&(f==='alle'||d.stage===f));
   const chip=(k,l)=>`<button class="chip" data-do="filter" data-id="${k}" aria-pressed="${f===k}">${l}</button>`;
   return `<div class="head"><h1 class="title">Deals</h1><p class="sub">${S.spam} Spam-Mails aussortiert</p></div>
   ${spaceBar()}
   <div class="chips">${chip('alle','Alle')}${chip('neu','Neu')}${chip('frei','Freigabe')}${chip('lauf','Läuft')}${chip('geld','Abrechnen')}</div>
-  ${strip(`sub:${V.space}:deals`)}
-  <div class="deals">${list.map(d=>`<button class="deal" data-do="deal" data-id="${d.id}"><span class="t"><span class="n">${esc(d.brand)}</span><span class="pill ${STAGE[d.stage][1]}">${STAGE[d.stage][0]}</span></span><small>${esc(d.line)}</small>${!me()&&d.money?`<small class="m">${esc(d.money)}</small>`:''}</button>`).join('')||'<p class="sub">Hier ist gerade nichts.</p>'}</div>`;
+  ${V.listAll?'':strip(`sub:${V.space}:deals`)}
+  <div class="deals">${list.map(d=>`<button class="deal" data-do="deal" data-id="${d.id}"><span class="t"><span class="n">${esc(d.brand)}</span><span class="pill ${STAGE[d.stage][1]}">${STAGE[d.stage][0]}</span></span><small>${V.listAll?`${SPACES[d.space].short}, `:''}${esc(d.line)}</small>${!me()&&d.money?`<small class="m">${esc(d.money)}</small>`:''}</button>`).join('')||'<p class="sub">Hier ist gerade nichts.</p>'}</div>`;
  }
 };
 function taskRow(t,canCheck,tag){
@@ -640,8 +654,16 @@ function taskRow(t,canCheck,tag){
   return `<div class="row${t.done?' done':''}">${canCheck?`<button class="cb" data-do="todo" data-id="${t.id}" aria-pressed="${!!t.done}" aria-label="${esc(t.text)} erledigt">${check()}</button>`:`<span class="dot">${I.wait}</span>`}${jump?`<button class="grow" ${jump}>${body}</button>`:body}</div>`;
 }
 function spaceBar(){
-  return `<div class="spaces" id="spaces" role="group" aria-label="Bereich wählen" style="--n:${SPACE_KEYS.indexOf(V.spaceWas||V.space)}"><i class="sp-ind"></i>${SPACE_KEYS.map(k=>`<button class="sp" data-do="space" data-id="${k}" aria-pressed="${V.space===k}" style="${spaceStyle(k)}">${SPACES[k].short}</button>`).join('')}</div>`;
+  const all=V.tab!=='ideen',keys=all?['alle',...SPACE_KEYS]:SPACE_KEYS,now=all&&V.listAll?'alle':V.space;
+  return `<div class="spaces" id="spaces" role="group" aria-label="Bereich wählen" style="--cols:${keys.length};--n:${keys.indexOf(now)}"><i class="sp-ind"></i>${keys.map(k=>`<button class="sp" data-do="space" data-id="${k}" aria-pressed="${now===k}" style="${k==='alle'?'--c:var(--fg)':spaceStyle(k)}">${k==='alle'?'Alle':SPACES[k].short}</button>`).join('')}</div>`;
 }
+function tintNow(){
+  if(V.tab==='ideen')return V.space;
+  if((V.tab==='videos'||V.tab==='deals')&&!V.listAll)return V.space;
+  if(V.tab==='roadmap'&&SPACES[V.planFilter])return V.planFilter;
+  return '';
+}
+function applyTint(){const t=tintNow();if(t)app.dataset.tint=t;else delete app.dataset.tint;$('#theme').content=t?SPACES[t].c:COL.ink}
 function viewFolder(k){
   const sp=SPACES[k],v=S.videos.filter(x=>x.space===k).length,i=S.ideas.filter(x=>x.space===k&&!x.video).length,d=S.deals.filter(x=>x.space===k).length;
   const label={videos:`${v} ${sp.item}${v===1?'':'s'}`,ideen:`${i} ${i===1?'Idee':'Ideen'}`,deals:`${d} ${d===1?'Deal':'Deals'}`};
@@ -678,7 +700,7 @@ function strip(parent){
 }
 function videoRow(v){
   const st=STATUS[v.status],d=v.deal&&deal(v.deal);
-  return `<button class="row" data-do="open-video" data-id="${v.id}"><span class="mini"><canvas data-knit="mini" data-p="${st[2]}" data-c="${SPACES[v.space].c}" aria-hidden="true"></canvas></span><span class="grow"><b>${esc(v.title)}</b><small>${d?`Für ${esc(d.brand)}`:'Eigener Content'}, ${v.clips.length?`${v.clips.length} ${v.clips.length===1?'Clip':'Clips'}`:'noch kein Material'}</small></span><span class="pill ${st[1]}">${st[0]}</span></button>`;
+  return `<button class="row" data-do="open-video" data-id="${v.id}"><span class="mini"><canvas data-knit="mini" data-p="${st[2]}" data-c="${SPACES[v.space].c}" aria-hidden="true"></canvas></span><span class="grow"><b>${esc(v.title)}</b><small>${V.tab==='videos'&&V.listAll?`${SPACES[v.space].short}, `:''}${d?`für ${esc(d.brand)}`:'eigener Content'}, ${v.clips.length?`${v.clips.length} ${v.clips.length===1?'Clip':'Clips'}`:'noch kein Material'}</small></span><span class="pill ${st[1]}">${st[0]}</span></button>`;
 }
 function viewCustom(id){
   const n=node(id);if(!n){V.custom=null;return VIEW[V.tab]()}
@@ -902,15 +924,13 @@ function paint(fresh){
   const cn=V.custom&&node(V.custom);
   const world=V.tab==='heute'?(cn&&cn.space?`f-${cn.space}`:V.folder?`f-${V.folder}`:'heute'):V.tab;
   app.dataset.world=world;
-  app.dataset.space=V.space;
-  $('#theme').content=world==='ideen'?SPACES[V.space].c:COL.ink;
+  applyTint();
   view.innerHTML=V.custom?viewCustom(V.custom):VIEW[V.tab]();
   view.scrollTop=fresh?0:y;
   $$('.tab',hem).forEach(t=>t.dataset.tab===V.tab?t.setAttribute('aria-current','page'):t.removeAttribute('aria-current'));
   mountKnits(fresh);
   moveInd();
   $('#fab').setAttribute('aria-pressed',V.tab==='ideen');
-  const sb=$('#spaces');if(sb){sb.getBoundingClientRect();sb.style.setProperty('--n',SPACE_KEYS.indexOf(V.space));V.spaceWas=V.space}
   if(fresh&&!calm){
     $$('.row,.deal,.fo,.hint,.rstat',view).slice(0,10).forEach((e,i)=>{e.style.setProperty('--i',i);e.classList.add('rise')});
     $$('.st',view).slice(0,10).forEach((e,i)=>{e.style.setProperty('--i',i);e.classList.add('throw')});
@@ -955,10 +975,10 @@ function protoSheet(){
   <button class="btn" data-do="open-test">Handy-Test starten</button><button class="btn ghost" data-do="reset">Beispieldaten zurücksetzen</button>`);
 }
 function newVideoSheet(preset,ideaId){
-  const sp=SPACES[V.space],word=sp.item==='Stream'?'Neuer Stream':'Neues Video',deals=S.deals.filter(d=>d.space===V.space);
-  sheet(word,`<h2>${word}</h2><p class="sub">Für ${esc(sp.name)}</p><form data-form="video" data-idea="${ideaId||''}" style="display:contents"><div class="field"><label for="v-title">Titel</label><input id="v-title" maxlength="60" autocomplete="off" placeholder="Wie heißt ${sp.item==='Stream'?'der Stream':'das Video'}?" value="${esc(preset||'')}"><p class="err" id="v-err" hidden>Gib ${sp.item==='Stream'?'dem Stream':'dem Video'} einen Titel.</p></div>
-  <div class="field"><label for="v-deal">Für eine Kooperation?</label><select id="v-deal"><option value="">Nein, eigener Content</option>${deals.map(d=>`<option value="${d.id}">${esc(d.brand)}</option>`).join('')}</select></div>
-  <button class="btn" type="submit">Anlegen</button></form><p class="note">Der Drive-Ordner entsteht dann automatisch unter ${esc(sp.name)}.</p>`,preset?null:'#v-title');
+  const pickSpace=V.tab==='videos'&&V.listAll&&!V.custom,sp=SPACES[V.space],word=!pickSpace&&sp.item==='Stream'?'Neuer Stream':'Neues Video',deals=S.deals.filter(d=>d.space===V.space);
+  sheet(word,`<h2>${word}</h2>${pickSpace?'':`<p class="sub">Für ${esc(sp.name)}</p>`}<form data-form="video" data-idea="${ideaId||''}" style="display:contents"><div class="field"><label for="v-title">Titel</label><input id="v-title" maxlength="60" autocomplete="off" placeholder="Wie heißt ${word==='Neuer Stream'?'der Stream':'das Video'}?" value="${esc(preset||'')}"><p class="err" id="v-err" hidden>Gib ${word==='Neuer Stream'?'dem Stream':'dem Video'} einen Titel.</p></div>
+  ${pickSpace?`<div class="field"><label for="v-space">Für welchen Account?</label><select id="v-space">${SPACE_KEYS.map(k=>`<option value="${k}"${k===V.space?' selected':''}>${esc(SPACES[k].name)}</option>`).join('')}</select></div>`:`<div class="field"><label for="v-deal">Für eine Kooperation?</label><select id="v-deal"><option value="">Nein, eigener Content</option>${deals.map(d=>`<option value="${d.id}">${esc(d.brand)}</option>`).join('')}</select></div>`}
+  <button class="btn" type="submit">Anlegen</button></form><p class="note">Der Drive-Ordner entsteht dann automatisch beim passenden Account.</p>`,preset?null:'#v-title');
 }
 function eventSheet(){
   sheet('Neuer Termin',`<h2>Neuer Termin</h2><form data-form="event" style="display:contents"><div class="field"><label for="e-title">Was steht an?</label><input id="e-title" maxlength="60" autocomplete="off" placeholder="Dreh, Call, Deadline"><p class="err" id="e-err" hidden>Schreib kurz auf, was ansteht.</p></div>
@@ -1020,7 +1040,7 @@ function leaveTo(p){
   V.custom=null;V.video=null;
   if(p==='root'){V.tab='heute';V.folder=null}
   else if(p.startsWith('space:')){V.tab='heute';V.folder=p.slice(6);V.space=V.folder}
-  else if(p.startsWith('sub:')){const[,k,sub]=p.split(':');V.space=k;if(TAB_KEYS.includes(sub)){V.tab=sub;V.folder=null}else{V.tab='heute';V.folder=k;V.custom=p}}
+  else if(p.startsWith('sub:')){const[,k,sub]=p.split(':');V.space=k;if(TAB_KEYS.includes(sub)){V.tab=sub;V.listAll=false;V.folder=null}else{V.tab='heute';V.folder=k;V.custom=p}}
   else if(p.startsWith('video:')){V.tab='videos';V.video=p.slice(6)}
   else V.custom=p;
   paint(true);
@@ -1034,7 +1054,7 @@ const DO={
  proto(){protoSheet()},
  close(){closeSheet()},
  role(el){S.role=el.dataset.id;save();closeSheet();paint(false);toast(me()?'Du siehst die App als German Pink Cardigan.':'Du siehst die App als Philip.')},
- reset(){S=seed();save();closeSheet();V.space='main';V.folder=null;V.custom=null;V.video=null;V.test=false;V.tests=[];paint(true);toast('Beispieldaten sind zurückgesetzt.')},
+ reset(){S=seed();save();closeSheet();V.space='main';V.listAll=true;V.folder=null;V.custom=null;V.video=null;V.test=false;V.tests=[];paint(true);toast('Beispieldaten sind zurückgesetzt.')},
  todo(el){const t=S.todos.find(x=>x.id===el.dataset.id);t.done=!t.done;save();el.setAttribute('aria-pressed',t.done);el.closest('.row').classList.toggle('done',t.done);const c=$('.count',view);if(c&&!V.folder)c.textContent=S.todos.filter(x=>x.who===S.role&&!x.done).length;const sm=$(`.fo[data-id="${t.space}"] small`,view);if(sm)sm.textContent=`${S.todos.filter(x=>x.space===t.space&&!x.done).length} offen`},
  'open-video'(el){const id=el.dataset.id;closeSheet();V.tab='videos';V.space=video(id).space;V.folder=null;V.custom=null;V.video=id;V.test=false;paint(true)},
  back(){const v=V.video&&video(V.video);V.video=null;V.test=false;V.folder=null;V.custom=v&&v.folder?v.folder:null;paint(true)},
@@ -1043,7 +1063,7 @@ const DO={
  'open-folder'(el){const id=el.dataset.id,n=node(id);wipe(()=>{V.custom=id;V.video=null;if(n.space)V.space=n.space;paint(true)},el)},
  'plan-new'(el){planSheet(null,el.dataset.month)},
  'plan-open'(el){if(road&&Date.now()-road.justDragged<400)return;planSheet(el.dataset.id)},
- 'plan-filter'(el){V.planFilter=el.dataset.id;$$('[data-do=plan-filter]',view).forEach(b=>b.setAttribute('aria-pressed',b===el));road.layout();road.stats()},
+ 'plan-filter'(el){const id=el.dataset.id;if(id===V.planFilter)return;wipe(()=>{V.planFilter=id;applyTint();$$('[data-do=plan-filter]',view).forEach(b=>b.setAttribute('aria-pressed',b===el));road.layout();road.stats()},el,true)},
  'plan-play'(){road.play()},
  'plan-del'(el){const id=el.dataset.id,n=road.nodes.get(id);S.plan=S.plan.filter(p=>p.id!==id);n.b.remove();road.nodes.delete(id);save();closeSheet();road.layout();road.stats();toast('Ziel gelöscht.')},
  'new-folder'(el){folderSheet(el.dataset.id)},
@@ -1051,8 +1071,12 @@ const DO={
  'folder-del'(el){const id=el.dataset.id;if(countItems(id)>0){closeSheet();toast('Nur leere Ordner lassen sich löschen.');return}const p=S.folders.find(f=>f.id===id).parent;S.folders=S.folders.filter(f=>f.id!==id);delete S.files[id];save();closeSheet();leaveTo(p);toast('Ordner gelöscht.')},
  'pick-files'(){$('#file-picker').click()},
  'drive-node'(el){driveSheet(pathOf(el.dataset.id))},
- space(el){const k=el.dataset.id;if(k===V.space)return;V.spaceWas=V.space;if(V.tab==='ideen'){wipe(()=>{V.space=k;V.filter='alle';paint(true)},el,true);return}V.space=k;V.filter='alle';paint(false)},
- sub(el){const id=el.dataset.id,k=V.folder;wipe(()=>{if(TAB_KEYS.includes(id)){V.tab=id;V.space=k;V.folder=null}else{V.custom=`sub:${k}:${id}`}V.video=null;V.test=false;paint(true)},el)},
+ space(el){
+  const k=el.dataset.id,all=k==='alle',ideas=V.tab==='ideen';
+  if(ideas?k===V.space:(all?V.listAll:!V.listAll&&k===V.space))return;
+  wipe(()=>{if(!ideas)V.listAll=all;if(!all)V.space=k;V.filter='alle';paint(true)},el,true);
+ },
+ sub(el){const id=el.dataset.id,k=V.folder;wipe(()=>{if(TAB_KEYS.includes(id)){V.tab=id;V.space=k;V.listAll=false;V.folder=null}else{V.custom=`sub:${k}:${id}`}V.video=null;V.test=false;paint(true)},el)},
  'drive-space'(){driveSheet(drivePath(V.folder))},
  'drive-sub'(el){driveSheet(drivePath(V.space,subName(V.space,el.dataset.id)))},
  'new-video'(){newVideoSheet()},
@@ -1096,13 +1120,13 @@ const FORM={
   const id=f.dataset.id,old=id&&S.plan.find(x=>x.id===id),vals={title:t,month:$('#p-month',f).value,space:$('#p-space',f).value,status:$('#p-status',f).value,who:$('#p-who',f).value,note:$('#p-note',f).value.trim()};
   closeSheet();
   if(old){const wasDone=old.status==='done';Object.assign(old,vals);save();const n=road.nodes.get(id);road.dress(n);road.layout();road.stats();if(vals.status==='done'&&!wasDone&&!calm)burst($('i',n.b));toast('Ziel gespeichert.');return}
-  const p={id:'p'+Date.now(),...vals};S.plan.push(p);save();if(!planVisible(p)){V.planFilter='alle';$$('[data-do=plan-filter]',view).forEach(b=>b.setAttribute('aria-pressed',b.dataset.id==='alle'))}
+  const p={id:'p'+Date.now(),...vals};S.plan.push(p);save();if(!planVisible(p)){V.planFilter='alle';applyTint();$$('[data-do=plan-filter]',view).forEach(b=>b.setAttribute('aria-pressed',b.dataset.id==='alle'))}
   const n=road.addNode(p);n.b.classList.add('fresh');road.layout();road.stats();setTimeout(()=>{road.focus(n);n.b.classList.remove('fresh')},calm?0:700);toast('Ziel eingetragen.');
  },
  folder(f){const inp=$('#f-name',f),err=$('#f-err',f),name=inp.value.trim(),parent=f.dataset.id,msg=folderNameError(parent,name);if(msg){err.textContent=msg;err.hidden=false;inp.focus();return}S.folders.push({id:'c'+Date.now(),parent,name});save();closeSheet();paint(false);toast('Ordner angelegt. Google Drive ist hier noch nicht verbunden.')},
  'folder-edit'(f){const id=f.dataset.id,x=S.folders.find(o=>o.id===id),inp=$('#f-edit',f),err=$('#f-edit-err',f),name=inp.value.trim(),msg=folderNameError(x.parent,name,id);if(msg){err.textContent=msg;err.hidden=false;inp.focus();return}x.name=name;save();closeSheet();paint(false);toast('Name gespeichert.')},
  'idea-edit'(f){const i=S.ideas.find(x=>x.id===f.dataset.id),t=$('#i-text',f).value.trim();if(t){i.text=t;save()}closeSheet();paint(false)},
- video(f){const tt=$('#v-title',f),t=tt.value.trim();if(!t){$('#v-err',f).hidden=false;tt.focus();return}const id='v'+Date.now(),dealId=$('#v-deal',f).value||null;S.videos.unshift({id,space:V.space,folder:V.custom||null,title:t,deal:dealId,status:'leer',clips:[]});
+ video(f){const tt=$('#v-title',f),t=tt.value.trim();if(!t){$('#v-err',f).hidden=false;tt.focus();return}const id='v'+Date.now(),dealSel=$('#v-deal',f),spSel=$('#v-space',f),dealId=dealSel&&dealSel.value||null;if(spSel)V.space=spSel.value;S.videos.unshift({id,space:V.space,folder:V.custom||null,title:t,deal:dealId,status:'leer',clips:[]});
   if(f.dataset.idea){const i=S.ideas.find(x=>x.id===f.dataset.idea);if(i)i.video=id}save();closeSheet();V.tab='videos';V.custom=null;V.video=id;V.test=false;paint(true);toast('Angelegt. Der Drive-Ordner wird hier nur simuliert.')},
  event(f){const tt=$('#e-title',f),t=tt.value.trim();if(!t){$('#e-err',f).hidden=false;tt.focus();return}S.events.push({id:'e'+Date.now(),type:$('#e-type',f).value,title:t,date:$('#e-date',f).value||day(1),time:$('#e-time',f).value||''});save();closeSheet();paint(false);toast('Termin eingetragen. Google Kalender ist hier noch nicht verbunden.')},
  compare(f){const i=+f.dataset.id,t=V.tests[i],inp=$('input',f),mb=parseSize(inp.value);if(!mb){$(`#cmp-err-${i}`,f).hidden=false;inp.focus();return}t.photos=inp.value.trim();const diff=(mb-t.mb)/mb,pct=Math.round(Math.abs(diff)*100);t.verdict=Math.abs(diff)<=.05?{ok:true,text:'Original: Die Größe stimmt mit der Fotos-App überein.'}:diff>0?{ok:false,text:`Verkleinert: Hier kommt das Video ${pct} % kleiner an als in der Fotos-App.`}:{ok:false,text:`Abweichung: Hier ist das Video ${pct} % größer als eingetragen. Prüf die Zahl noch einmal.`};paint(false)}
